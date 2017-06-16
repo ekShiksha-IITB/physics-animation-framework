@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+  <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>CodePen - EkShiksha ObjCreation</title>
+  
+  
+  
+  <link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
+<link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+
+      <style>
+      
+.floating{
+  visibility:hidden;
+  border:10px solid rgba(255,255,255,.5);
+  z-index:9;
+  position:absolute;
+  left:22.5%;
+  top:10%;
+  background-color:#4FBFFE;
+width:55%;
+  height:650px;
+  
+}
+.quit-toggle{
+  color:white;
+ font-size:22px;
+ 
+  width:13px;
+  padding-left:4px;
+  position:absolute;
+  left:90%;
+  top:2%;
+ cursor: pointer;
+}
+.float-data{
+  padding:40px;
+}
+.form-head {
+  color:purple;
+  font-size:22px;
+  margin-left:3%;
+  padding-bottom:1%;
+  padding-top:1%;
+}
+input {
+  margin-left:3%;
+ 
+  border:0px;
+  
+}
+.main-head{
+  font-size:32px;
+  padding-top:1%;
+  padding-bottom:1%;
+  
+}
+input,select {
+    margin-left: 3%;
+    background-color: whitesmoke;
+    border: 0px;
+    border-bottom: 2px purple solid;
+    font-size: 22px;
+  
+}
+.CodeMirror {
+   
+    margin-left: 3%;
+    margin-right: 3%;
+}
+button{
+   color:purple;
+  font-size:22px;
+  margin-top:3%;
+  margin-left:20%;
+  margin-bottom:5%;
+}
+
+button:hover{
+   color:white;
+  background-color:purple;
+  
+  margin-top:3%;
+  margin-left:20%;
+  margin-bottom:5%;
+}
+
+    </style>
+
+  
+  
+  
+  
+</head>
+
+<body translate="no" >
+
+  <!--
+.div.fluid-container.main-head Create a new object
+  form
+    div.form-head Name :
+    input.object_name(type="text")
+    div.form-head Code snippet :
+    
+    textarea#int(type="text",name="object_name",width="600")  
+       | var object_name = function(attributes...){   
+       |   //write the code for the object
+       |  return object;
+    button(type="submit") Submit
+  //button(onclick="preview()") Preview
+button.ini(style="cursor: pointer;") Preview
+div.floating
+  div.quit-toggle x 
+  div.float-data DATA
+
+-->
+
+<div class="div fluid-container">
+  <div class="main-head text-center">CREATE A NEW OBJECT</div>
+ 
+    <div class="form-head">Name :</div>
+    <input class="object_name" type="text" name="name"/>
+    <div class="form-head">Category:</div>
+    <select class="category" name="category"></select>
+     <div class="form-head">Function Name</div>
+    <input class="object_func" type="text" name="function"/>
+    <div class="form-head">Icon Name</div>
+    <input class="object_icon" type="text" name="icon"/>
+    <div class="form-head">Code snippet :</div>
+    <textarea id="int" type="text" name="object_code" width="600"></textarea>
+    <button onclick="submit()">Submit</button>
+<button class="ini" style="cursor: pointer">Preview</button>
+ 
+  <!--button(onclick="preview()") Preview-->
+</div>
+
+
+<div class="floating" id="draggable-element">
+  <div class="quit-toggle">x </div>
+  <div class="float-data">DATA</div>
+</div>
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<script src="https://codemirror.net/lib/codemirror.js"></script>
+<script src="https://codemirror.net/mode/javascript/javascript.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
+    <script>
+        $.ajax({
+        url: "DataServlet?category=&&object=",
+        type:'GET',
+        datatype:"json",
+        error : function(){
+            alert("Error Occured");
+         },
+        success: function(response) {
+               var category = response.split(',');
+        var temp = '';
+	for(x in category){
+	  temp += '<option value="'+category[x]+'">'+category[x]+'</option>';
+	} 
+        $(".category").html(temp);
+	  }
+	});
+    </script>
+    <script>
+    var selected = null, 
+    x_pos = 0, y_pos = 0, // Stores x & y coordinates of the mouse pointer
+    x_elem = 0, y_elem = 0; // Stores top, left values (edge) of the element
+
+// Will be called when user starts dragging an element
+function _drag_init(elem) {
+    // Store the object of the element which needs to be moved
+    selected = elem;
+    x_elem = x_pos - selected.offsetLeft;
+    y_elem = y_pos - selected.offsetTop;
+}
+
+// Will be called when user dragging an element
+function _move_elem(e) {
+    x_pos = document.all ? window.event.clientX : e.pageX;
+    y_pos = document.all ? window.event.clientY : e.pageY;
+    if (selected !== null) {
+        selected.style.left = (x_pos - x_elem) + 'px';
+        selected.style.top = (y_pos - y_elem) + 'px';
+    }
+}
+
+// Destroy the object when we are done
+function _destroy() {
+    selected = null;
+}
+
+// Bind the functions...
+document.getElementById('draggable-element').onmousedown = function () {
+    _drag_init(this);
+    return false;
+};
+
+document.onmousemove = _move_elem;
+document.onmouseup = _destroy; 
+var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
+    lineNumbers: true,
+    styleActiveLine: true,
+    matchBrackets: true,
+   mode:"javascript",
+   theme:"blackboard"
+  });
+function submit(){
+    alert("Hi");
+  var temp = {
+    "name": $('.object_name').val().toLowerCase() ,
+    "category":$('.category').val(),
+    "func": $('.object_func').val().toLowerCase(),
+    "icon":$('.object_icon').val().toLowerCase(),
+    "code": editor.getValue()  
+  };
+  console.log(temp);
+  $.ajax({
+      type:"POST",
+      url:"Add",
+      data:temp,
+      error:function(){
+        alert("Error occured");
+      },
+      success:function(response){
+          alert(response);
+      }
+  });
+  /* ajax call to send data */
+}
+$(".ini").on("click",function(){
+    $(".floating").css("visibility","visible");
+ 
+   $('.float-data').html("<script>\r\nvar scene = new THREE.Scene();\r\n\r\nvar camera = new THREE.PerspectiveCamera(45, window.innerWidth\/window.innerHeight, 0.1 , 1000);\r\nvar renderer = new THREE.WebGLRenderer();\r\nrenderer.setClearColor(0x4FBFFE);\r\nrenderer.setSize(window.innerWidth\/2, window.innerHeight\/1.4);\r\ncamera.position.x = -30;\r\ncamera.position.y = 40;\r\ncamera.position.z = 30;\r\ncamera.lookAt(scene.position);\r\n\r\n"+editor.getValue()+"\r\n\r\n                    scene.add("+$('.object_name').val().toLowerCase()+"_creator"+"());\r\n\r\nfunction renderScene(){\r\nrequestAnimationFrame (renderScene);\r\nrenderer.render(scene , camera);\r\n}\r\n$(\'.float-data\').append( renderer.domElement );\r\nrenderScene();\r\n<\/script>");
+  });
+  $(".quit-toggle").on("click",function(){
+    $(".floating").css("visibility","hidden")
+  });
+  </script>
+
+  
+  
+
+</body>
+</html>
+ 

@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+  <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>Select-Objects</title>
+  
+  
+  
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+<link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
+<link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
+
+      <style>
+      .bar {
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    z-index: 9;
+    background-color: black;
+    top: 0%;
+    left: 0%;
+    scroll-behavior: smooth;
+    overflow: scroll;
+}
+img {
+    vertical-align: middle;
+    padding-top: 10%;
+   
+}
+.navbar.navbar-toggleable-md.navbar-light.bg-faded {
+    position: absolute;
+    z-index: 9;
+    top: 0px;
+    right: 30%;
+}
+.hide-show-tool {
+    position: absolute;
+    top: 4px;
+    z-index: 9;
+    left: 26%;
+}
+.hide-show-ani {
+    position: absolute;
+    top: 4px;
+    z-index: 9;
+    left: 9%;
+}
+.edi {
+    position: absolute;
+    top: 16%;
+    width: 70%;
+    left: 16%;
+  background-color: aqua;
+  display : none;
+}
+
+
+    </style>
+
+  
+  
+  
+  
+</head>
+
+<body translate="no" >
+
+  
+<script
+			  src="https://code.jquery.com/jquery-3.2.1.js"
+			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+			  crossorigin="anonymous"></script>
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+ 
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <button class="btn-primary">Save Progress</button>
+      </li>
+   
+     
+    
+    </ul>
+  </div>
+</nav>
+<div class="main" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div class="bar row"></div>
+<button class="hide-show-tool" onclick="sh('bar')">HIDE/SHOW Toolbar</button>
+<button class="hide-show-ani" onclick="sh('edi')">HIDE/SHOW Animation Editor</button>
+<div class="edi" >Enter The Animation Code<textarea id="int"></textarea><button onclick="anim()">OK</button></div>
+  
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
+<script src="https://codemirror.net/lib/codemirror.js"></script>
+<script src="https://codemirror.net/mode/javascript/javascript.js"></script>
+
+ <script src="OrbitControls.js"></script>
+        <script src="DragControls.js"></script>
+        <script src="TrackballControls.js"></script>
+
+        <script src="dat.gui.min.js"></script>
+        
+<script>
+		var path="";
+                var category=window.location.href.split("&")[1];
+		$.ajax({
+		type:'GET',  
+                url: 'DataServlet?category='+category+'&&object=',
+		  datatype:"json",
+		  error : function(){
+		      alert("Error Occured");
+		   },
+		  success: function(response) {
+		 var object = JSON.parse(response);
+                                   console.log(object);
+		for(x in object){
+		  var temp = document.createElement('script');
+                  console.log(temp);
+		temp.setAttribute('src',object[x].file+'.js');
+		document.head.appendChild(temp);
+		}
+		  }
+		});
+		</script>
+    <script>
+    
+    var count=0;
+    var objects=[];
+    var dragElements=[];
+    var gui;
+    
+    
+    
+    
+     var custom_ani = function(){
+  console.log("working");
+};
+function anim(){
+  code = editor.getValue()  
+  custom_ani = new Function("",code);
+  sh("edi");
+}
+    
+    
+    
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1 , 1000);
+var renderer = new THREE.WebGLRenderer();
+renderer.setClearColor(0x4FBFFE);
+renderer.setSize(window.innerWidth, window.innerHeight);
+camera.position.x = 0;
+camera.position.y = 0;
+camera.position.z = 40;
+camera.lookAt(scene.position);
+
+
+
+
+var controls = new THREE.OrbitControls(camera,renderer.domElement);
+            camera.position.z = 60;
+                
+            
+
+            scene.background = new THREE.Color("#67DEF7");
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+
+         var mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 6000, 6000 ), groundMaterial );
+            mesh233.position.y =  -29;
+            mesh233.material.color.set("lightgreen" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+            mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 550, 5550 ), groundMaterial );
+            mesh233.position.y = - 17-10;
+            mesh233.material.color.set("#47FC57" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+         
+         mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry(300, 300 ), groundMaterial );
+            mesh233.position.y = - 15-10;
+            mesh233.material.color.set("#33C720" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+            
+
+            var ambientLight;
+            var spotLight;
+            ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,0,0);
+            scene.add(ambientLight);
+            spotLight = new THREE.PointLight(16777215);
+            spotLight.position.set(60,10,40);
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+               ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,100,100);
+            scene.add(ambientLight);
+
+
+
+
+document.addEventListener("mousedown",onDocumentMouseDown);
+            var raycaster;
+            function onDocumentMouseDown(event) {
+                console.log("mouse down");
+                 // event.preventDefault();
+                  mouse = new THREE.Vector2(); 
+  
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse, camera);
+  var intersects = raycaster.intersectObjects(objects, true);
+  if (intersects.length > 0) {
+   
+      console.log(intersects[0].object.index);
+    if(gui){
+        gui.destroy();
+        console.log("destroying");
+      gui = new dat.GUI();
+      console.log("creating");
+    }else{
+          gui = new dat.GUI();
+      console.log("creating");
+    
+    }
+    //if(intersects[0].object.name === "object[0]")
+    
+    intersects[0].object.gui(intersects[0].object);
+  }
+  }
+function updateMaterial(object,value)
+{
+    //var value = cube.parameters.material;
+    var newMaterial;
+    if (value === "Basic")
+        newMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+    else if (value === "Lambert")
+        newMaterial = new THREE.MeshLambertMaterial( { color: 0x000000 } );
+    else if (value === "Phong")
+        newMaterial = new THREE.MeshPhongMaterial( { color: 0x000000 } );
+    else // (value == "Wireframe")
+        newMaterial = new THREE.MeshBasicMaterial( { wireframe: true } );
+    object.material = newMaterial;
+    object.material.color.setHex( object.parameters.color.replace("#", "0x") );
+    object.material.opacity = object.parameters.opacity;  
+    object.material.transparent = true;
+    object.visible = object.parameters.visible;
+//    render();
+}
+
+function resetObject(object)
+{
+    object.parameters.color = "#ff0000";
+    object.parameters.opacity = 1;
+    object.parameters.visible = true;
+    object.parameters.material = "Phong";
+    updateMaterial(object,"Phong");
+}
+
+
+
+function renderScene(){
+    custom_ani();
+    requestAnimationFrame (renderScene);
+    renderer.render(scene , camera);
+}
+
+var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
+    lineNumbers: true,
+    styleActiveLine: true,
+    matchBrackets: true,
+   mode:"javascript",
+   theme:"blackboard"
+  });
+
+
+function sh(cl){
+ x = $('.'+cl)[0];
+   if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+function drag(ev) {
+  console.log(ev.target);
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+function drop(ev) {
+ var x=ev.clientX;
+ var y=ev.clientY;
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var temp = window[data]();
+  scene.add(temp);
+  console.log(temp);
+  console.log(window.innerHeight);
+  temp.position.set(-((-( x / window.innerWidth )*2+1)*40), (-( y / window.innerHeight )*2  +1)*20,0.5);
+console.log(x+" "+temp.position.x);
+  console.log(y+" "+temp.position.y);
+
+  //ev.target.appendChild(document.getElementById(data));
+  var dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
+    dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
+    dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+}
+$('.main').append( renderer.domElement );
+renderScene();
+
+
+$.ajax({
+		  url: "DataServlet?category="+category+"&&object=",
+		  type:'GET',
+		  datatype:"json",
+		  error : function(){
+		      alert("Error Occured");
+		   },
+		  success: function(response) {
+                      
+		 var objects = JSON.parse(response);
+                    
+                    for(x in objects){
+                      $('.bar').append('<div class="'+objects[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="'+objects[x].icon+'" id="'+objects[x].func+'"></div>');
+                    }
+		}
+            });
+
+  </script>
+
+  
+  
+
+</body>
+</html>
+ 

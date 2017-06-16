@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+
+<head>
+  <meta charset="UTF-8">
+ <title>UI-1</title>
+  
+  
+  
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+
+      <style>
+      .bar {
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    z-index: 9;
+    background-color: black;
+    top: 0%;
+    left: 0%;
+}
+img {
+    vertical-align: middle;
+    padding-top: 10%;
+   
+}
+    </style>
+
+  
+  
+  
+  
+</head>
+
+
+
+  
+<script
+			  src="https://code.jquery.com/jquery-3.2.1.js"
+			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+			  crossorigin="anonymous"></script>
+                          
+<div class="main" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+
+<div class="bar row"></div>
+
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
+ <script>
+		var path="";
+                var category=window.location.href.split("&")[1];
+		$.ajax({
+		type:'GET',  
+                url: 'DataServlet?category='+category+'&&object=',
+		  datatype:"json",
+		  error : function(){
+		      alert("Error Occured");
+		   },
+		  success: function(response) {
+		 var object = JSON.parse(response);
+                                   console.log(object);
+		for(x in object){
+		  var temp = document.createElement('script');
+                  console.log(temp);
+		temp.setAttribute('src',object[x].file+'.js');
+		document.head.appendChild(temp);
+		}
+		  }
+		});
+		</script>
+
+    <script>
+    var data_obj = [];
+    var scene = new THREE.Scene();
+
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1 , 1000);
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setClearColor(0x4FBFFE);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.position.z = 400;
+    camera.lookAt(scene.position);
+
+    function renderScene(){
+    requestAnimationFrame (renderScene);
+    renderer.render(scene , camera);
+    }
+    /*function ball(a=20,b=20,c=20){
+      return new THREE.Mesh(new THREE.BoxGeometry(a,b,c),
+                           new THREE.MeshBasicMaterial({
+        color:"yellow"
+      }));
+    }*/
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+      console.log(ev.target);
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function drop(ev) {
+        var x=ev.clientX;
+        var y=ev.clientY;
+
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var temp = window[data]();
+        scene.add(temp);
+        data_obj.push(temp);
+        console.log(data_obj);
+        console.log(window.innerHeight);
+        temp.position.set(-((-( x / window.innerWidth )*2+1)*400), (-( y / window.innerHeight )*2  +1)*200,0.5);
+        console.log(x+" "+temp.position.x);
+        console.log(y+" "+temp.position.y);
+
+          //ev.target.appendChild(document.getElementById(data));
+        }
+        $('.main').append( renderer.domElement );
+        renderScene();
+
+
+
+
+		var path="";
+
+		$.ajax({
+		  url: "DataServlet?category="+category+"&&object=",
+		  type:'GET',
+		  datatype:"json",
+		  error : function(){
+		      alert("Error Occured");
+		   },
+		  success: function(response) {
+                      
+		 var objects = JSON.parse(response);
+                    
+                    for(x in objects){
+                      $('.row').append('<div class="'+objects[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="'+objects[x].icon+'" id="'+objects[x].func+'"></div>');
+                    }
+		}
+            });
+            
+            function submit()
+            {
+                $.ajax({
+		  url: "UploadObject",
+		  type:'POST',
+		  datatype:"json",
+                  data:data_obj,
+		  error : function(){
+		      alert("Error Occured");
+		   },
+		  success: function(response) {
+                      alert("success");
+		}
+            });
+            }
+		
+  </script>
+
+  
+  
+
+
+
+ 
