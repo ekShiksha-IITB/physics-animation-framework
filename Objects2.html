@@ -10,7 +10,7 @@
   
   
   
-  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+   <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
 <link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
 <link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
   <style>
@@ -315,6 +315,57 @@ padding: 0;
 #navigation li.active {
     border-color: #f2c920;
 }
+#aniEdi {
+    display : none;
+}
+.header {
+    background-color: #213D5C;
+    color: white;
+    font-size: 28px;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+.float , .float-Basic {
+    border: 5px #213D5C solid;
+    float:right;
+}
+.okay {
+  padding-top:2%;
+  padding-bottom:1%;
+  padding-left:1%;
+ 
+}
+.okay > button {
+   background-color:#213D5C;
+  color:white;
+  padding:1%;
+  font-size:22px;
+  border:none;
+}
+.okay > button:active{
+   background-color:white;
+  color:#213D5C;
+  padding:1%;
+  font-size:22px;
+}
+
+.toolkit > div > img {
+    width: 75%;
+    padding: 10%;
+}
+.BasicInfo > form > span {
+  font-size:22px;
+  padding-left:7%;
+  }
+.BasicInfo > form > input {
+ margin-left:7%;
+  } 
+#draggable-element{
+ position:absolute;
+ right : 0px;
+ top : 100px;
+}
+
 
     </style>
 
@@ -323,20 +374,18 @@ padding: 0;
 <body translate="no" >
 
   
-<script
-			  src="https://code.jquery.com/jquery-3.2.1.js"
-			  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-			  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
 
 <div class="main" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 <div class="edi" >Enter The Animation Code<textarea id="int"></textarea><button onclick="anim()">OK</button></div>
+<!-- nav menu -->
 <div id="menu">
   <h2 class="menu-title">EkShiksha<br>Physics</h2>
  <ul id="navigation">
    <li onclick="show_toggle(this)"><span>Basic Details</span></li>
-				<li onclick="show_toggle(this)"><span>Change Atmosphere</span></li>
+				<li onclick="show_toggle(this)"><span>Change Background</span></li>
 				<li onclick="show_toggle(this)"><span>Choose Objects</span></li>
-       <li onclick="show_toggle(this)"><span>Animation Code Editor</span></li>
+       <li onclick="show_toggle(this)" id = "aniEdi"><span>Animation Code Editor</span></li>
    <li onclick="show_toggle(this)"><span>Drag/Drop Control Editor</span></li>
    <li onclick="show_toggle(this)"><span>Concept/Theory Editor</span></li>
    <li onclick="show_toggle(this)"><span>Save Progress</span></li>
@@ -352,7 +401,27 @@ padding: 0;
 
   <img class="button-menu" src="http://www.freeiconspng.com/uploads/settings-icon-6.png"></img>
 
-
+<!-- nav menu end -->
+<!-- basic info prompt -->
+<div class="float-Basic" style="width:20%;display:none;" id="draggable-element">
+  <div class="row header">
+    <div class="float-head text-center col-xs-9">Basic Info </div>
+    <div class="float-Basic-cancel  col-xs-3" onclick="cancel(this)">X</div>
+  </div>
+  <div class="content">
+    <div class="BasicInfo row">
+      <form>
+        <span>Exp name:</span><br>
+        <input type="text" name="Name" required>
+        <br>
+        <span>Author name:</span><br>
+        <input type="text" name="Authorname" required>
+        <br> </form>
+    </div>
+  </div>
+  <div class="okay"><button>Submit</button></div>
+</div>
+<!-- basic info prompt end -->
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
 <script src="https://codemirror.net/lib/codemirror.js"></script>
@@ -366,7 +435,8 @@ padding: 0;
         <script src="dat.gui.min.js"></script>
 <script>
 		var path="";
-                var category=window.location.href.split("&")[1];
+                var category=window.location.href.split("?")[1];
+               if(category == "Mechanics") $('#aniEdi').css("display","block");
 		$.ajax({
 		type:'GET',  
                 url: 'DataServlet?category='+category+'&&object=',
@@ -387,7 +457,7 @@ padding: 0;
 		});
 		</script>
     <script>
-    
+  // THREE js   
     var count=0;
     var objects=[];
     var dragElements=[];
@@ -531,7 +601,8 @@ function renderScene(){
     requestAnimationFrame (renderScene);
     renderer.render(scene , camera);
 }
-
+// THREE js ends
+// Animation editor 
 var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
     lineNumbers: true,
     styleActiveLine: true,
@@ -540,7 +611,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
    theme:"blackboard"
   });
 
-
+// Hide or show a div
 function sh(cl){
  x = $('.'+cl)[0];
    if (x.style.display === 'none') {
@@ -549,7 +620,7 @@ function sh(cl){
         x.style.display = 'none';
     }
 }
-
+// Drag/drop
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -577,6 +648,7 @@ console.log(x+" "+temp.position.x);
 }
 $('.main').append( renderer.domElement );
 renderScene();
+// nav menu 
 $(".button-menu").click(function(e){ 
 			e.preventDefault();
 	    	$('body').addClass("menu-active");
@@ -610,9 +682,52 @@ function showMenu(){
 function show_toggle(e){
 if(e.style.borderColor=="") e.style.borderColor = "yellow";
   else e.style.borderColor = "";
+var temp = e.childNodes[0].innerHTML;
+temp = "float-"+temp.split(" ")[0];
+
+sh(temp);
+}
+// drag control functions 
+ var selected = null, 
+    x_pos = 0, y_pos = 0, // Stores x & y coordinates of the mouse pointer
+    x_elem = 0, y_elem = 0; // Stores top, left values (edge) of the element
+
+// Will be called when user starts dragging an element
+function _drag_init(elem) {
+    // Store the object of the element which needs to be moved
+    selected = elem;
+    x_elem = x_pos - selected.offsetLeft;
+    y_elem = y_pos - selected.offsetTop;
 }
 
+// Will be called when user dragging an element
+function _move_elem(e) {
+    x_pos = document.all ? window.event.clientX : e.pageX;
+    y_pos = document.all ? window.event.clientY : e.pageY;
+    if (selected !== null) {
+        selected.style.left = (x_pos - x_elem) + 'px';
+        selected.style.top = (y_pos - y_elem) + 'px';
+    }
+}
 
+// Destroy the object when we are done
+function _destroy() {
+    selected = null;
+}
+
+// Bind the functions...
+document.getElementById('draggable-element').onmousedown = function () {
+    _drag_init(this);
+    return false;
+};
+
+document.onmousemove = _move_elem;
+document.onmouseup = _destroy; 
+// cancel prompt
+function cancel(e){
+e=e.className.split(" ")[0].split("-");
+   sh(e[0]+"-"+e[1]);
+}
 $.ajax({
 		  url: "DataServlet?category="+category+"&&object=",
 		  type:'GET',
