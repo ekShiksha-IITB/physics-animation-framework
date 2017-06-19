@@ -1,3 +1,22 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Gist
+ @pragati1996
+ Sign out
+ Watch 7
+  Star 2
+ Fork 0 ekShiksha-IITB/physics-animation-framework
+ Code  Issues 4  Pull requests 0  Projects 0  Wiki  Settings Insights 
+Branch: master Find file Copy pathphysics-animation-framework/index.html
+c0bd09d  5 hours ago
+ reshabh updating..UI
+1 contributor
+RawBlameHistory     
+228 lines (193 sloc)  8.6 KB
 
 
 <!DOCTYPE html>
@@ -194,13 +213,7 @@
     <!-- Theme JavaScript -->
     <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/freelancer.min.js"></script>
     <script>
-     var response = "Electricity,Optics,Mechanics"
-     var category = response.split(',');
-     var temp = '';
-     for(x in category)
-	    temp += '<a href="Objects2.html?'+category[x]+'"><div class="col-lg-4">'+category[x]+'</div></a>'; 
-     $(".skills").html(temp);
-    /*
+     
 	$.ajax({
         url: "DataServlet?category=&&object=",
         type:'GET',
@@ -209,15 +222,14 @@
             console.log("Error Occured");
          },
         success: function(response) {
-               var category = response.split(',');
-        var temp = '';
-	for(x in category){
-	  temp += '<div class="col-lg-4"><a href="Objects2.html?'+category[x]+'">'+category[x]+'</a></div>';
-	} 
-        $(".skills").html(temp);
+        var category = response.split(',');
+     var temp = '';
+     for(x in category)
+	    temp += '<a href="Objects2.html?'+category[x]+'"><div class="col-lg-3">'+category[x]+'</div></a>'; 
+     $(".skills").html(temp);
 	  }
 	});
-	*/
+	
     </script>
 
 </body>
