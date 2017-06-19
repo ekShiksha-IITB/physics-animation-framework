@@ -27,6 +27,10 @@
 	section#about {
     		border-top: 100px #fff solid;
 	}
+	.skills > a {
+		color: white;
+		font-size: 32px;
+	}
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -78,7 +82,13 @@
                     <div class="intro-text">
                         <h1 class="name">Start Experimenting</h1>
                         <hr class="star-light">
-                        <span class="skills row cat"></span>
+                        <div class="skills row cat">
+			<!--
+				<div class="col-lg-4">Electricity</div>
+				<div class="col-lg-4">Mechanics</div>
+				<div class="col-lg-4">Optics</div>
+			-->
+			</div>
                     </div>
                 </div>
             </div>
@@ -184,6 +194,13 @@
     <!-- Theme JavaScript -->
     <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/freelancer.min.js"></script>
     <script>
+     var response = "Electricity,Optics,Mechanics"
+     var category = response.split(',');
+     var temp = '';
+     for(x in category)
+	    temp += '<a href="Objects2.html?'+category[x]+'"><div class="col-lg-4">'+category[x]+'</div></a>'; 
+     $(".skills").html(temp);
+    /*
 	$.ajax({
         url: "DataServlet?category=&&object=",
         type:'GET',
@@ -195,12 +212,12 @@
                var category = response.split(',');
         var temp = '';
 	for(x in category){
-	  temp += '<div class="col-sm-3"><a href="Objects2.html?'+category[x]+'">'+category[x]+'</a></div>';
+	  temp += '<div class="col-lg-4"><a href="Objects2.html?'+category[x]+'">'+category[x]+'</a></div>';
 	} 
-        $(".cat").html(temp);
+        $(".skills").html(temp);
 	  }
 	});
-
+	*/
     </script>
 
 </body>
