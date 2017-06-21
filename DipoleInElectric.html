@@ -1,0 +1,256 @@
+<html>
+
+	<head>
+
+		<title>My first three.js app</title>
+		<meta charset="UTF-8">
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script src="DragControls.js"></script>
+		<script src="TrackballControls.js"></script>
+		<script src="ObjectControls.js"></script>
+		<script src="stats.min.js"></script>
+		<script src="dat.gui.min.js"></script>
+		<script type="text/javascript">
+		function setBackground(){
+			scene.background = new THREE.Color("#FDF6D5");
+      /*
+        var groundMaterial = new THREE.MeshBasicMaterial(  );
+
+			var mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 6000, 6000 ), groundMaterial );
+		    mesh233.position.y =  -29;
+		    mesh233.material.color.set("lightgreen" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);
+
+		    var groundMaterial = new THREE.MeshBasicMaterial(  );
+		    mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 550, 5550 ), groundMaterial );
+		    mesh233.position.y = - 17-10;
+		    mesh233.material.color.set("#47FC57" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);
+		    var groundMaterial = new THREE.MeshBasicMaterial(  );
+
+			mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry(300, 300 ), groundMaterial );
+		    mesh233.position.y = - 15-10;
+		    mesh233.material.color.set("#33C720" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);*/
+		}
+
+		function setLights(){
+
+			var ambientLight;
+			var spotLight;
+	        ambientLight = new THREE.AmbientLight(16777215, 0.5);
+          ambientLight.position.set(-100,0,0);
+        	scene.add(ambientLight);
+          spotLight = new THREE.PointLight(16777215);
+          spotLight.position.set(60,10,40);
+        	spotLight.castShadow = true;
+        	scene.add(spotLight);
+       	  ambientLight = new THREE.AmbientLight(16777215, 0.5);
+          ambientLight.position.set(-100,100,100);
+        	scene.add(ambientLight);
+
+		}
+
+		function setCamera(){
+
+			camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.z = 60;
+
+
+		}
+		function setDragControls(){
+
+
+			dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
+			dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
+			dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+
+		}
+
+		function sceneCreation(){
+
+			scene = new THREE.Scene();
+			renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+		}
+		function setOrbitControls(){
+
+			 controls = new THREE.OrbitControls(camera,renderer.domElement);
+
+		}
+		</script>
+		<script>
+			var objects = [];
+			var dragElements = [];
+			var camera;
+			var scene;
+			var renderer;
+			var dragControls;
+
+			sceneCreation();
+			setCamera();
+			setDragControls();
+			setBackground();
+			setLights();
+			//setOrbitControls();
+      //function dipole_creator(){
+      //gui controls
+      gui = new dat.GUI();
+
+      parameters =
+      {
+      //x: 0, y: 30, z: 0,
+
+      E:10,
+      Angle: 0
+
+      };
+
+      var electricF = gui.add( parameters, 'E' ).min(1).max(10).step(1).listen();
+      var Change= gui.add( parameters, 'Angle' ).min(-4).max(4).step(0.5).listen();
+      Change.name("Change Angle");
+
+
+      electricF.onChange(function(value)
+      {  field_creator(value);
+
+       });
+      Change.onChange(function(value)
+      {   changeAngle(value);
+      });
+
+      //gui.add( parameters, 'charge' ).name("Add Charge");
+
+      gui.open();
+
+
+        var l=10;
+
+        var material = new THREE.LineBasicMaterial({
+	         color: 0x000000,
+           linewidth: 5
+          });
+
+          var geometry = new THREE.Geometry();
+          geometry.vertices.push(
+	        new THREE.Vector3( -l/2, 0, 0 ),
+	        new THREE.Vector3( l/2, 0, 0 ),
+	       );
+         //creation of dipole
+        var line = new THREE.Line( geometry, material );
+        scene.add( line );
+        var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+        var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
+        var sphere1 = new THREE.Mesh( geometry, material );
+        sphere1.magnitude=+1;
+        sphere1.position.set(line.geometry.vertices[1].x,line.geometry.vertices[1].y,line.geometry.vertices[1].z);
+        line.add(sphere1);
+        var sphere2 = new THREE.Mesh( geometry, material );
+        sphere2.magnitude=-1;
+        sphere2.position.set(line.geometry.vertices[0].x,line.geometry.vertices[0].y,line.geometry.vertices[0].z);
+        line.add(sphere2);
+        console.log("asd");
+        var dir1 = new THREE.Vector3( 1, 0, 0 );
+        dir1.normalize();
+        var length = 5;
+        var hex = 0x0000ff;
+        var origin1 = new THREE.Vector3(sphere1.position.x, sphere1.position.y, 0 );
+        var arrowHelper1 = new THREE.ArrowHelper( dir1, origin1, length, hex ,0.2 * length, 1);
+        arrowHelper1.cone.material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
+        scene.add(arrowHelper1);
+        var dir2 = new THREE.Vector3( -1, 0, 0 );
+        dir2.normalize();
+        var origin2 = new THREE.Vector3(sphere2.position.x, sphere2.position.y, 0 );
+        var arrowHelper2 = new THREE.ArrowHelper( dir2, origin2, length, hex ,0.2 * length, 1);
+        arrowHelper2.cone.material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
+        scene.add(arrowHelper2);
+         //dipole ends
+         //creation of field lines
+        var range=100;
+        var xrange=100;
+        var dir = new THREE.Vector3( 1, 0, 0 );
+        dir.normalize();
+        var length = 10;
+        var hex = 0x000000;
+        field = [];
+        function field_creator(x){
+        if(field.length>0){
+        for(var i=0;i<field.length;i++){
+        scene.remove(field[i]);
+
+        }
+        field = [];
+
+        }
+        for(var i=-range;i<=range;i=i+x){
+        for(var j=-xrange;j<=xrange;j=j+10){
+        var origin = new THREE.Vector3(j, i, 0 );
+        var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+        scene.add(arrowHelper);
+        field.push(arrowHelper);
+        //  console.log("running");
+
+        }
+
+
+        }
+        }
+        //end of field lines
+
+
+    //function to change angle of dipole
+    function changeAngle(theata){
+/*
+      line.geometry.vertices[0].x=-l/2*Math.cos(theata);
+      line.geometry.vertices[0].y=-l/2*Math.sin(theata);
+      line.geometry.vertices[1].x=l/2*Math.cos(theata);
+      line.geometry.vertices[1].y=l/2*Math.sin(theata);
+      line.geometry.verticesNeedsUpdate=true;*/
+      line.rotation.z=theata;
+      scene.remove(arrowHelper1);
+      scene.remove(arrowHelper2);
+      console.log(line.geometry.vertices[0].x);
+
+      //var length=20;
+      origin1= new THREE.Vector3((l/2)*Math.cos(theata), (l/2)*Math.sin(theata), 0 );
+      arrowHelper1 = new THREE.ArrowHelper( dir1, origin1, length, hex ,0.2 * length, 1);
+      arrowHelper1.cone.material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+      scene.add(arrowHelper1);
+      //var dir2 = new THREE.Vector3( -1, 0, 0 );
+      //dir2.normalize();
+      origin2 = new THREE.Vector3((-l/2)*Math.cos(theata), (-l/2)*Math.sin(theata), 0 );
+      arrowHelper2 = new THREE.ArrowHelper( dir2, origin2, length, hex ,0.2 * length, 1);
+      arrowHelper2.cone.material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+      scene.add(arrowHelper2);
+
+
+    }
+
+    field_creator(10);
+    //changeAngle(Math.PI/2);
+
+
+
+
+			var render = function () {
+				requestAnimationFrame(render);
+				renderer.render(scene,camera);
+			};
+      changeAngle(Math.PI/4);
+
+			render();
+		</script>
+	</body>
+</html>
