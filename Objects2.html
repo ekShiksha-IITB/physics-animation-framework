@@ -402,6 +402,10 @@ width:22% !important ;
 top:0px;
 height:100%;
 }
+#gui {
+    position: absolute;
+    right: 58%;
+}
 
 
     </style>
@@ -637,11 +641,13 @@ document.addEventListener("mousedown",onDocumentMouseDown);
     if(gui){
         gui.destroy();
         console.log("destroying");
-      gui = new dat.GUI();
+      gui = new dat.GUI({ autoPlace: false } );
       console.log("creating");
+        gui.domElement.id = 'gui';
     }else{
-          gui = new dat.GUI();
+          gui = new dat.GUI({ autoPlace: false } );
       console.log("creating");
+        gui.domElement.id = 'gui';
     
     }
     //if(intersects[0].object.name === "object[0]")
