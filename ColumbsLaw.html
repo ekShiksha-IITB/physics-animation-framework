@@ -1,0 +1,374 @@
+<html>
+
+    <head>
+
+        <title>My first three.js app</title>
+        <meta charset="UTF-8">
+        <style>
+            body { margin: 0; }
+            canvas { width: 100%; height: 100% }
+        </style>
+    </head>
+    <body>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="three.js"></script>
+        <script src="OrbitControls.js"></script>
+        <script src="DragControls.js"></script>
+        <script src="TrackballControls.js"></script>
+
+        <script src= "ThreeCSG.js"></script>
+        <script src="ObjectControls.js"></script>
+        <script src="stats.min.js"></script>
+        <script src="dat.gui.min.js"></script>
+
+
+        <!--
+        <script>
+        var path="";
+
+        $.ajax({
+          url: "Retrieve",
+          type:'POST',
+          datatype:"json",
+          error : function(){
+              alert("Error Occured");
+           },
+          success: function(response) {
+         var object = response.split(",");
+        for(x in object){
+          var temp = document.createElement('script');
+
+        temp.setAttribute('src',object[x]+'.js');
+        temp.setAttribute('onload','declarations()');
+        console.log(temp);
+        document.head.appendChild(temp);
+        }
+          }
+        });
+        </script>
+        -->
+        <script src = "object.js"></script>
+
+
+
+        <script>
+            objects=[]
+            var gui;
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+						var IsDragRunning=false;
+						var objectDragging;
+
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+
+            //var controls = new THREE.OrbitControls(camera,renderer.domElement);
+            camera.position.z = 60;
+
+            var dragElements = [];
+
+            var dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
+            dragControls.addEventListener( 'dragstart', function ( event ) { /*controls.enabled = false;*/
+						IsDragRunning=true;} );
+            dragControls.addEventListener( 'dragend', function ( event ) {
+							IsDragRunning=false;
+						/*controls.enabled = true;*/ } );
+
+            scene.background = new THREE.Color("#FDF6D5");
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+						//text geometry
+
+						var myfont;
+
+						function text(object,text1){
+
+									if(!myfont){
+											var loader = new THREE.FontLoader();
+													loader.load( 'optimer_regular.typeface.json', function ( font ) {
+														var count = 0;
+														myfont = font;
+												});
+											}
+									if(myfont){
+									var textGeometry = new THREE.TextGeometry( text1, {
+											font: myfont,
+											size: 1,
+											height:0,
+											curveSegments: 12,
+											bevelThickness: 0.1,
+											bevelSize: 0.1,
+											bevelEnabled: false
+									});
+									var textMaterial = new THREE.MeshPhongMaterial(
+											{ color: "black",transparent:true,opacity:1.0,specular:"#B6C015"}
+									);
+									numberText = new THREE.Mesh( textGeometry, textMaterial );
+									numberText.position.set(2,1,1);
+									object.add(numberText);
+								  }
+								}
+
+
+/*
+         var mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 6000, 6000 ), groundMaterial );
+            mesh233.position.y =  -29;
+            mesh233.material.color.set("lightgreen" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+            mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 550, 5550 ), groundMaterial );
+            mesh233.position.y = - 17-10;
+            mesh233.material.color.set("#47FC57" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+            var groundMaterial = new THREE.MeshBasicMaterial(  );
+
+         mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry(300, 300 ), groundMaterial );
+            mesh233.position.y = - 15-10;
+            mesh233.material.color.set("#33C720" );
+            mesh233.rotation.x = - Math.PI / 2;
+            scene.add(mesh233);
+						*/
+
+
+            var ambientLight;
+            var spotLight;
+            ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,0,0);
+            scene.add(ambientLight);
+            spotLight = new THREE.PointLight(16777215);
+            spotLight.position.set(60,10,40);
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+               ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,100,100);
+            scene.add(ambientLight);
+						//dat gui
+						gui = new dat.GUI();
+
+	parameters =
+	{
+		//x: 0, y: 30, z: 0,
+		Charge:0,
+		Er:1,
+		//color: "#ff0000", // color (change "#" to "0x")
+		//opacity: 1,
+		visible: true,
+		material: "Phong",
+		charge: function() { charge_create(mag) ;
+		findForce();}
+	};
+	var cubeX = gui.add( parameters, 'Charge' ).min(-10).max(10).step(1).listen();
+	var epsilon = gui.add( parameters, 'Er' ).min(0).max(2).step(0.01).listen();
+	var mag=0;
+	var e=1;
+	cubeX.onChange(function(value)
+	{    mag = value;   });
+	epsilon.onChange(function(value)
+	{    e = value;
+		findForce(test.position);
+	 });
+
+	gui.add( parameters, 'charge' ).name("Add Charge");
+
+	gui.open();
+
+            //couloms law code
+						charge=[];
+						function charge_create(magnitude){
+							var t;
+							var geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+							if(magnitude>=0){
+							var material = new THREE.MeshPhongMaterial( {color: 0xff0000} );
+							t="+";
+						}
+							else{
+							var material = new THREE.MeshPhongMaterial( {color: 0x000000} );
+							t="-";
+						}
+							var sphere = new THREE.Mesh( geometry, material );
+							text(sphere,t);
+							scene.add( sphere );
+							sphere.position.set(Math.random()*40-20,0,0);
+							sphere.magnitude=magnitude;
+							charge.push(sphere);
+							dragElements.push(sphere);
+							return sphere;
+						}
+						var geometry = new THREE.SphereGeometry( 0.5, 32, 32 );
+						var material = new THREE.MeshPhongMaterial( {color: 0x0000ff} );
+						var test = new THREE.Mesh( geometry, material );
+						scene.add( test );
+						test.forceX=0;
+						test.forceY=0;
+						dragElements.push(test);
+						test.position.set(0,0,0);
+						text(test,"Test Charge");
+
+						/*charge_create(+1);
+						console.log(charge[0].magnitude);
+						charge_create(-1);
+						console.log(charge[1].magnitude);*/
+
+						//negative_charge=[];
+						var arr=new Array(20);
+						var resultant=null;
+						findForce(test.position);
+
+						function findForce(){
+							var fx=0;
+							var fy=0;
+
+
+						for(var i=0;i<charge.length;i++){
+							//console.log(position.x);
+
+							var r_square=Math.pow(Math.abs(test.position.x-charge[i].position.x),2)+Math.pow(Math.abs(test.position.y-charge[i].position.y),2);
+							var k=9*Math.pow(10,9)/e;
+							var force=k*charge[i].magnitude/(r_square);
+							force=force/1000000;
+							var y=test.position.y-charge[i].position.y;
+							var x=test.position.x-charge[i].position.x;
+							var angle =Math.atan(Math.abs(y/x));
+							if(y<0 && x>0)angle=-angle;
+							if(x<0 && y>0)angle=Math.PI-angle;
+							if(x<0 && y<0)angle=Math.PI+angle;
+							var force_x=force*(Math.cos(angle));
+							var force_y=force*(Math.sin(angle));
+							//arrowHelper
+
+							var dir = new THREE.Vector3( force_x, force_y, 0 );
+						//normalize the direction vector (convert to vector of length 1)
+							dir.normalize();
+
+							var origin = new THREE.Vector3( test.position.x, test.position.y, 0 );
+							var length = Math.abs(force);
+							if(charge[i].magnitude>=0)
+							var hex = 0xff0000;
+							else{
+								var hex=0x000000;
+							}
+							var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+							//text(arrowHelper.line,force);
+							//scene.add( arrowHelper );
+							//arr.push(arrowHelper);
+
+							if(arr[i]){
+								//console.log("asdas");
+								scene.remove(arr[i]);
+								arr[i]=arrowHelper;
+								scene.add( arrowHelper );
+							}
+							else{
+								//console.log("a");
+								arr[i]=arrowHelper;
+								scene.add( arrowHelper );
+
+
+
+							}
+							fx=fx+force_x;
+							fy=fy+force_y;
+							//console.log("force x"+fx+"   "+"force_y"+fy);
+
+						}
+						var net_force=Math.sqrt(Math.pow(force_x,2)+Math.pow(force_y,2))
+						var dir = new THREE.Vector3( fx, fy, 0 );
+					//normalize the direction vector (convert to vector of length 1)
+						dir.normalize();
+
+						var origin = new THREE.Vector3( test.position.x, test.position.y, 0 );
+						var length = Math.abs(net_force);
+						var hex = 0x0000ff;
+						var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+						//text(arrowHelper.line,force);
+						if(resultant==null){
+							resultant=arrowHelper;
+							scene.add(resultant);
+
+						}
+						else{
+							//console.log()
+							scene.remove(resultant);
+							resultant=arrowHelper;
+							scene.add(resultant);
+						}
+
+
+
+
+
+
+
+
+
+						}
+						document.addEventListener("mousedown",onDocumentMouseDown);
+						var raycaster;
+						function onDocumentMouseDown(event) {
+							// event.preventDefault();
+
+							var mouse;
+							mouse = new THREE.Vector2();
+
+							mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+							mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+					     	raycaster = new THREE.Raycaster();
+						    raycaster.setFromCamera(mouse, camera);
+						    var intersects = raycaster.intersectObjects(objects, true);
+
+						    if (intersects.length > 0) {
+						    	if(IsDragRunning == true){
+
+						    		objectDragging = intersects[0].object;
+
+						    	}
+			     			}
+							console.log(IsDragRunning );
+							if(objectDragging)
+								console.log(objectDragging.name);
+						}
+
+						document.addEventListener("mousemove",onDocumentMouseMove);
+						var raycaster;
+						function onDocumentMouseMove(event) {
+							// event.preventDefault();
+							if(IsDragRunning){
+								console.log("asd");
+								findForce(test.position);
+
+								//render();
+							}
+
+						}
+
+
+
+
+
+
+
+						//findForce();
+						var count=false;
+						var render = function () {
+                requestAnimationFrame(render);
+								if(myfont && !count){
+									text(test,"Test Charge");
+									console.log("hello");
+									count=true;
+								}
+								//findForce(test.position);
+                renderer.render(scene,camera);
+            };
+
+
+
+
+            render();
+        </script>
+    </body>
+</html>
