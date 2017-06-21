@@ -524,7 +524,7 @@ height:100%;
                if(category == "Mechanics") $('#aniEdi').css("display","block");
 		$.ajax({
 		type:'GET',  
-                url: '/DataServlet?category="'+category+'"&&object=',
+                url: 'DataServlet?category='+category+'&&object=',
 		  datatype:"json",
 		  error : function(){
 		      console.log("Error Occured");
@@ -535,12 +535,11 @@ height:100%;
 var t = "";
 		for(x in object){
 		  var temp = document.createElement('script');
-            t += '<div class="'+objects[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="http://10.129.28.187/Physics/'+objects[x].icon+'" id="'+objects[x].func+'"></div>';     
+            t += '<div class="'+object[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="'+object[x].icon+'" id="'+object[x].func+'"></div>';     
 		temp.setAttribute('src',object[x].file+'.js');
 		document.head.appendChild(temp);
 		}
 $('.toolkit').html(t);
-
 		  }
 		});
 		</script>
