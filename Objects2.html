@@ -324,10 +324,17 @@ padding: 0;
     font-size: 28px;
     padding-top: 1%;
     padding-bottom: 1%;
+    -webkit-user-select: none; /* Chrome, Opera, Safari */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
 }
 .float , .float-Basic {
     border: 5px #213D5C solid;
     float:right;
+     position:absolute;
+      right : 0px;
+ top : 100px;
 }
 .okay {
   padding-top:2%;
@@ -361,9 +368,39 @@ padding: 0;
  margin-left:7%;
   } 
 #draggable-element{
- position:absolute;
- right : 0px;
- top : 100px;
+
+}
+.float > .content > span {
+    font-size: 24px;
+    padding-left: 3%;
+}
+.float-Theme > .content > span {
+    font-size: 24px;
+    padding-left: 3%;
+}
+.Theme > div > img {
+    vertical-align: bottom;
+    margin-left: 2%;
+}
+.Theme > div > span {
+   font-size :20px;
+    }
+.Theme {
+  padding-top:2%;
+  padding-bottom:3%;
+}
+.toolkit > div > img {
+    width: 75%;
+    padding: 10%;
+}
+.toolkit {
+    height: 450px;
+    overflow-y: scroll;
+}
+.float-Object {
+width:22% !important ;
+top:0px;
+height:100%;
 }
 
 
@@ -382,11 +419,11 @@ padding: 0;
 <div id="menu">
   <h2 class="menu-title">EkShiksha<br>Physics</h2>
  <ul id="navigation">
-   <li onclick="show_toggle(this)"><span>Basic Details</span></li>
-				<li onclick="show_toggle(this)"><span>Change Background</span></li>
-				<li onclick="show_toggle(this)"><span>Choose Objects</span></li>
-       <li onclick="show_toggle(this)" id = "aniEdi"><span>Animation Code Editor</span></li>
-   <li onclick="show_toggle(this)"><span>Drag/Drop Control Editor</span></li>
+   <li onclick="show_toggle(this)"><span vlaue="Basic">Basic Details</span></li>
+				<li onclick="show_toggle(this)"><span value="Theme">Change Theme</span></li>
+				<li onclick="show_toggle(this)"><span value="Object">Choose Objects</span></li>
+       <li onclick="show_toggle(this)" id = "aniEdi"><span value="Animation">Animation Code Editor</span></li>
+   <li onclick="show_toggle(this)"><span value="Drag">Drag/Drop Control Editor</span></li>
    <li onclick="show_toggle(this)"><span>Concept/Theory Editor</span></li>
    <li onclick="show_toggle(this)"><span>Save Progress</span></li>
 			</ul>
@@ -402,26 +439,70 @@ padding: 0;
   <img class="button-menu" src="http://www.freeiconspng.com/uploads/settings-icon-6.png"></img>
 
 <!-- nav menu end -->
-<!-- basic info prompt -->
-<div class="float-Basic" style="width:20%;display:none;" id="draggable-element">
+<!-- theme change prompt-->
+<div class="float-Theme float" style="width:30%;display:none;" onmousedown="drag_mousedown(this)" >
   <div class="row header">
-    <div class="float-head text-center col-xs-9">Basic Info </div>
+    <div class="float-head text-center col-xs-9" value="Theme" >Change Theme</div>
+    <div class="float-Theme-cancel  col-xs-3" onclick="cancel(this)">X</div>
+  </div>
+  <div class="content">
+     <span>Choose Theme:</span><br>
+    <div class="Theme row">
+     
+      <!-- database call -->
+      
+     <div class="col-xs-6"> <input type="radio" name="back" value="Clear"><span>Clear Sky <span><img src="http://www.drodd.com/images14/blue22.jpg" style="width:40px;"></input></div>
+       <div class="col-xs-6"> <input type="radio" name="back" value="Clear"><span>Clear Sky <span><img src="http://www.drodd.com/images14/blue22.jpg" style="width:40px;"></input></div>
+         <div class="col-xs-6"> <input type="radio" name="back" value="Clear"><span>Clear Sky <span><img src="http://www.drodd.com/images14/blue22.jpg" style="width:40px;"></input></div>
+           <div class="col-xs-6"> <input type="radio" name="back" value="Clear"><span>Clear Sky <span><img src="http://www.drodd.com/images14/blue22.jpg" style="width:40px;"></input></div>
+ 
+    
+    </div>
+  </div>
+  <div class="okay"><button>OK</button></div>
+</div>
+<!-- theme changer end-->
+<!-- basic info prompt -->
+<div class="float-Basic float" style="width:20%;display:none;" onmousedown="drag_mousedown(this)">
+  <div class="row header">
+    <div class="float-head text-center col-xs-9" value="Basic">Basic Info </div>
     <div class="float-Basic-cancel  col-xs-3" onclick="cancel(this)">X</div>
   </div>
   <div class="content">
     <div class="BasicInfo row">
       <form>
         <span>Exp name:</span><br>
-        <input type="text" name="Name" required>
+        <input type="text" name="Name">
         <br>
         <span>Author name:</span><br>
-        <input type="text" name="Authorname" required>
+        <input type="text" name="Authorname">
         <br> </form>
     </div>
   </div>
   <div class="okay"><button>Submit</button></div>
 </div>
 <!-- basic info prompt end -->
+<!-- object chooser -->
+<div class="float-Object float" style="width:30%;display:none;" >
+  <div class="row header">
+    <div class="float-head text-center col-xs-9" value="Object">Change Objects</div>
+    <div class="float-Object-cancel  col-xs-3" onclick="cancel(this)">X</div>
+  </div>
+  <div class="content">
+     <span>Choose Objects:</span><br>
+    <div class="Object">
+     
+      <!-- database call -->
+      <div class="toolkit row text-center">
+  <!-- tools -->
+ </div>
+</div>
+  </div>
+  
+</div>
+<!-- object chooser ends -->
+
+
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
 <script src="https://codemirror.net/lib/codemirror.js"></script>
@@ -439,20 +520,23 @@ padding: 0;
                if(category == "Mechanics") $('#aniEdi').css("display","block");
 		$.ajax({
 		type:'GET',  
-                url: 'DataServlet?category='+category+'&&object=',
+                url: '/DataServlet?category="'+category+'"&&object=',
 		  datatype:"json",
 		  error : function(){
 		      console.log("Error Occured");
 		   },
 		  success: function(response) {
 		 var object = JSON.parse(response);
-                                   console.log(object);
+                                  
+var t = "";
 		for(x in object){
 		  var temp = document.createElement('script');
-                  console.log(temp);
+            t += '<div class="'+objects[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="http://10.129.28.187/Physics/'+objects[x].icon+'" id="'+objects[x].func+'"></div>';     
 		temp.setAttribute('src',object[x].file+'.js');
 		document.head.appendChild(temp);
 		}
+$('.toolkit').html(t);
+
 		  }
 		});
 		</script>
@@ -682,8 +766,9 @@ function showMenu(){
 function show_toggle(e){
 if(e.style.borderColor=="") e.style.borderColor = "yellow";
   else e.style.borderColor = "";
-var temp = e.childNodes[0].innerHTML;
-temp = "float-"+temp.split(" ")[0];
+
+//var temp = e.childNodes[0].innerHTML;
+var temp = "float-"+e.childNodes[0].attributes[0].value;//temp.split(" ")[0];
 
 sh(temp);
 }
@@ -716,8 +801,9 @@ function _destroy() {
 }
 
 // Bind the functions...
-document.getElementById('draggable-element').onmousedown = function () {
-    _drag_init(this);
+drag_mousedown = function (e) {
+ 
+    _drag_init(e);
     return false;
 };
 
@@ -728,22 +814,11 @@ function cancel(e){
 e=e.className.split(" ")[0].split("-");
    sh(e[0]+"-"+e[1]);
 }
-$.ajax({
-		  url: "DataServlet?category="+category+"&&object=",
-		  type:'GET',
-		  datatype:"json",
-		  error : function(){
-		      console.log("Error Occured");
-		   },
-		  success: function(response) {
-                      
-		 var objects = JSON.parse(response);
-                    
-                    for(x in objects){
-                      $('.bar').append('<div class="'+objects[x].name+' col-md-6 col-xs-12" ><img draggable="true" ondragstart="drag(event)" class="img-fluid" src="'+objects[x].icon+'" id="'+objects[x].func+'"></div>');
-                    }
-		}
-            });
+// drag complications
+$('input').click(function() {
+    $(this).focus();
+});
+
 
   </script>
 
