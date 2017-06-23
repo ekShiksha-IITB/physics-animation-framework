@@ -8,7 +8,7 @@ function cylinder_creator(radius=5,height=5){
     
     cylinder.index = count;
     cylinder.name = "objects["+count+"]";
-    cylinder.attr = "side";
+    cylinder.attr = "name,radius,height,color,opacity,visible,material,rotateX,rotateY,rotateZ";
     objects.push(cylinder);
     count+=1;
     dragElements.push(cylinder);
@@ -22,6 +22,9 @@ function cylinder_creator(radius=5,height=5){
         opacity: 1, 
         visible: true,
         material: "Phong",
+        rotateX:0,
+        rotateY:0,
+        rotateZ:0,
         reset: function() { resetObject(cylinder) }
 
     };
@@ -60,7 +63,22 @@ function cylinder_creator(radius=5,height=5){
         var cylinderVisible = gui.add( cylinder.parameters, 'visible' ).name('Visible?').listen();
     cylinderVisible.onChange(function(value) 
     {   cylinder.visible = value;      });
-    //gui.add( cylinder.parameters, 'reset' ).name("Reset Cube Parameters");
+    var rotateX=gui.add(cylinder.parameters,'rotateX').min(-Math.PI/2).max(Math.PI/2).step(Math.PI/10).name('rotateX').listen();
+    rotateX.onChange(function(value){
+        cylinder.rotation.x=value;
+    });
+    var rotateY=gui.add(cylinder.parameters,'rotateY').min(-Math.PI/2).max(Math.PI/2).step(Math.PI/10).name('rotateY').listen();
+    rotateY.onChange(function(value){
+        cylinder.rotation.y=value;
+    });
+    var rotateZ=gui.add(cylinder.parameters,'rotateZ').min(-Math.PI/2).max(Math.PI/2).step(Math.PI/10).name('rotateZ').listen();
+    rotateZ.onChange(function(value){
+        cylinder.rotation.z=value;
+    });
+    /*gui.add( cylinder.parameters, 'reset' ).name("Reset Cube Parameters");
+    gui.add( cylinder.parameters, 'rotateX' ).name("Rotate in X");
+    gui.add( cylinder.parameters, 'rotateY' ).name("Rotate in Y");
+    gui.add( cylinder.parameters, 'rotateZ' ).name("Rotate in Z");*/
     gui.open();
 
   }

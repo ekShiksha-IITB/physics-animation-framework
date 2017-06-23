@@ -4,8 +4,9 @@ function cube_creator(side=5){
     cube = new THREE.Mesh(new THREE.BoxGeometry(side,side,side),new THREE.MeshBasicMaterial({color:"red",transparent:true,opacity:1}));
     scene.add(cube);
     cube.index = count;
+    cube.obj="cube";
     cube.name = "objects["+count+"]";
-    cube.attr = "side";
+    cube.attr = "name,length,color,opacity,visible,material";
     objects.push(cube);
     count+=1;
     dragElements.push(cube);
@@ -57,7 +58,7 @@ function cube_creator(side=5){
         gui.add( cube.parameters, 'reset' ).name("Reset Cube Parameters");
         gui.open();
 
-    }
+    };
       return cube;
             
 }
