@@ -8,7 +8,7 @@ function cuboid_creator(length=5,breadth=10,height=15){
     scene.add(cuboid);
     cuboid.index = count;
     cuboid.name = "objects["+count+"]";
-    cuboid.attr = "side";
+    cuboid.attr = "name,length,breadth,height,color,opacity,visible,material";
     objects.push(cuboid);
     count+=1;
     dragElements.push(cuboid);

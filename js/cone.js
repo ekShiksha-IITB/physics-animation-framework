@@ -6,7 +6,7 @@ function cone_creator(radiusBottom=5,height=5){
     scene.add(cone);
     cone.index = count;
     cone.name = "objects["+count+"]";
-    cone.attr = "side";
+    cone.attr = "name.radius,height,color,opacity,visible,material";
     objects.push(cone);
     count+=1;
     dragElements.push(cone);

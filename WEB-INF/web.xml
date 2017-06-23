@@ -18,7 +18,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UploadObject</servlet-name>
-        <url-pattern>/UploadObject</url-pattern>
+        <url-pattern>/Upload</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AddObject</servlet-name>
