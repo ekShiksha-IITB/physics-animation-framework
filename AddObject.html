@@ -13,7 +13,11 @@
   
   <link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
 <link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css'>
+<link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://blackrockdigital.github.io/startbootstrap-freelancer/css/freelancer.min.css" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+   
 
       <style>
       
@@ -50,6 +54,7 @@ width:55%;
   padding-bottom:1%;
   padding-top:1%;
 }
+/*
 input {
   margin-left:3%;
  
@@ -70,11 +75,13 @@ input,select {
     font-size: 22px;
   
 }
+*/
 .CodeMirror {
    
     margin-left: 3%;
     margin-right: 3%;
 }
+/*
 button{
    color:purple;
   font-size:22px;
@@ -91,6 +98,7 @@ button:hover{
   margin-left:20%;
   margin-bottom:5%;
 }
+*/
 
     </style>
 
@@ -123,16 +131,43 @@ div.floating
 -->
 
 <div class="div fluid-container">
-  <div class="main-head text-center">CREATE A NEW OBJECT</div>
- 
+
+<!--  <div class="main-head text-center">CREATE A NEW OBJECT</div> -->
+ <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                
+                  
+                
+                <a class="navbar-brand" href="#page-top">EkShiksha Physics Object Creation</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                   
+                    <li class="page-scroll">
+                        <a href="#about">About</a>
+                    </li>
+                   
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
     <div class="form-head">Name :</div>
     <input class="object_name" type="text" name="name"/>
     <div class="form-head">Category:</div>
     <select class="category" name="category"></select>
      <div class="form-head">Function Name</div>
     <input class="object_func" type="text" name="function"/>
-    <div class="form-head">Icon Name</div>
-    <input class="object_icon" type="text" name="icon"/>
+    <div class="form-head">Icon</div>
+    <input class="object_icon" type="file" name="icon"/>
     <div class="form-head">Code snippet :</div>
     <textarea id="int" type="text" name="object_code" width="600"></textarea>
     <button onclick="submit()">Submit</button>
