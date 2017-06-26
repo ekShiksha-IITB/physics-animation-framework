@@ -547,7 +547,7 @@ height:100%;
 function anim(){
   code = editor.getValue();
   custom_ani = new Function("",code);
-  sh("edi");
+ sh("edi");
 }
     
     
@@ -663,7 +663,7 @@ function renderScene(){
 // THREE js ends
 // Animation editor 
 var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
-    lineNumbers: true,
+    lineNumbers: false,
     styleActiveLine: true,
     matchBrackets: true,
    mode:"javascript",
@@ -739,6 +739,9 @@ if(e.style.borderColor=="") e.style.borderColor = "yellow";
   else e.style.borderColor = "";
 //var temp = e.childNodes[0].innerHTML;
 var temp = "float-"+e.childNodes[0].attributes[0].value;//temp.split(" ")[0];
+console.log(temp);
+if(temp == "float-Animation") sh("edi");
+else 
 sh(temp);
 }
 // drag control functions 
