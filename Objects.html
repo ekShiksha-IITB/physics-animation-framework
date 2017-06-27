@@ -438,7 +438,7 @@ width : 27% !important;
     <li onclick="show_toggle(this)" id = "aniEdi"><span value="Animation">Animation Code Editor</span></li>
    <li onclick="show_toggle(this)"><span value="Drag">Drag/Drop Control Editor</span></li>
    <li onclick="show_toggle(this)"><span>Concept/Theory Editor</span></li>
-   <li onclick="save)"><span>Save Progress</span></li>
+   <li onclick="save()"><span>Save Progress</span></li>
 			</ul>
   <div class="bottom">
    
@@ -529,7 +529,7 @@ width : 27% !important;
    <span>c</span><input type="text">
 </form>
   </div>
-  <div class="okay"><button onclick="dragSubmit()">Submit</button></div>
+  <div class="okay"><button onclick="pushObject($('form')[1][0].value,$('form')[2][0].value,$('form')[3][0].value)">Submit</button></div>
 </div>
 <!-- drag/drop control ends-->
 
@@ -576,6 +576,7 @@ width : 27% !important;
 		});
 		</script>
     <script>
+var sel_objects = [];
   // THREE js   
     var count=0;
     var objects=[];
@@ -781,6 +782,7 @@ function anim(){
 
 			return line;
 		}  
+var objectDragging;
  if(category == "Mechanics"){   
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1 , 1000);
@@ -902,7 +904,9 @@ var parameter = 0.5;
 			    	if(IsDragRunning == true){
 
 			    		objectDragging = intersects[0].object;
-
+                       $('.drag-head').html(objectDragging);
+                        sh('float-Drag');
+                        
                         if(gui){
                             gui.destroy();
                             console.log("destroying");
@@ -1640,6 +1644,12 @@ var objects=[]
 
 			render();
 }
+function pushObject(a,b,c){
+var temp ;
+temp = [objectDragging,a,b,c];
+
+sel_objects.push(temp);
+}
 function updateMaterial(object,value)
 {
     //var value = cube.parameters.material;
@@ -1670,6 +1680,11 @@ function resetObject(object)
 function renderScene(){
     custom_ani();
     requestAnimationFrame (renderScene);
+
+    for(var i = 0; i<sel_object.length ;i++){
+        dragConstraints(sel_object[i][0],sel_object[i][1],sel_object[i][1],sel_object[i][2]);
+    }
+
     renderer.render(scene , camera);
 }
 // THREE js ends
