@@ -137,7 +137,7 @@ List of Experiments :
         var category = response.split(',');
      var temp = '';
      for(x in category)
-         temp +=  '<div class="row"><div class="main-data-head col-xs-6">My Experiment one</div><div class="main-data-run col-xs-2"><button>RUN</button></div><div class="main-data-modify col-xs-2"><button>MODIFY</button></div><div class="main-data-delete col-xs-2"><button>DELETE</button></div></div>'
+         temp +=  '<div class="row"><div class="main-data-head col-xs-6">'+category[x]+'</div><div class="main-data-run col-xs-2"><a href="DefaultSetup.html?'+category[x]+'"><button>RUN</button></a></div><div class="main-data-modify col-xs-2"><button>MODIFY</button></div><div class="main-data-delete col-xs-2"><button>DELETE</button></div></div>'
 	     
      $(".main-data").html(temp);
 	  }
