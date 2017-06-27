@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <meta name="author" content="Reshabh Sharma">
+
+    <title>EkShiksha Physics Animation Framework</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/css/freelancer.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <style>
+	section#about {
+    		border-top: 100px #fff solid;
+	}
+	.skills > a {
+		color: white;
+		font-size: 32px;
+	}
+    .main {
+    margin-top: 7%;
+    color: #18BC9C;
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: whitesmoke;
+    padding-bottom: 2%;
+    color:black;    
+    }
+    body {
+    background-color: #18BC9C;
+    }
+    .main-head {
+    font-size: 32px;
+    color: #18BC9C;
+    padding: 3%;
+    }
+    .main-data-head {
+    font-size: 25px;
+}
+.main-data-head {
+    padding-top: 4px;
+}
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+    background-color: white;
+    border: 1px #2C3E50 solid;
+    color: #2C3E50;
+}
+button {
+    border: 0px;
+    background-color: #2C3E50;
+    color: white;
+    font-size: 19px;
+
+    margin-top: 7px;
+}
+
+
+    
+
+
+
+
+
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" class="index">
+<div id="skipnav"><a href="#maincontent">Skip to main content</a></div>
+
+    <!-- Navigation -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#page-top">EkShiksha Physics Dashboard</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                   
+                    <li class="page-scroll">
+                        <a href="#about">About</a>
+                    </li>
+                   
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+<div class="main">
+<div class="main-head">
+List of Experiments :
+</div>
+<div class="main-data">
+
+</div>
+</div>
+   <script>
+     
+	$.ajax({
+        url: "DataServlet?category=&&object=",
+        type:'GET',
+        datatype:"json",
+        error : function(){
+            console.log("Error Occured");
+         },
+        success: function(response) {
+        var category = response.split(',');
+     var temp = '';
+     for(x in category)
+         temp +=  '<div class="row"><div class="main-data-head col-xs-6">My Experiment one</div><div class="main-data-run col-xs-2"><button>RUN</button></div><div class="main-data-modify col-xs-2"><button>MODIFY</button></div><div class="main-data-delete col-xs-2"><button>DELETE</button></div></div>'
+	     
+     $(".main-data").html(temp);
+	  }
+	});
+	
+    </script>
+
+</body>
+
+</html>
+
+
+
+
