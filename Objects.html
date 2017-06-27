@@ -6,12 +6,9 @@
   <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
   <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
   <title>Select-Objects</title>
-  
-  
-  
-   <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
-<link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
-<link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+  <link rel='stylesheet prefetch' href="https://codemirror.net/lib/codemirror.css">
+  <link rel='stylesheet prefetch' href="https://codemirror.net/theme/blackboard.css">
   <style>
       .bar {
     position: absolute;
@@ -396,6 +393,30 @@ width:22% !important ;
 top:0px;
 height:100%;
 }
+/* drag/drop editor */
+.float-Drag {
+
+width : 27% !important;
+
+}
+.drag-head{
+  font-size:22px;
+}
+.drag-form > span {
+  font-size : 20px;
+  padding-right:1%;
+  padding-left:2%;
+}
+.drag-form > input {
+  width : 15%;
+  }
+.drag-form{
+  padding-top:1%;
+}
+.drag-hint{
+  padding-top:2%;
+}
+/* drag/drop editor ends*/
     </style>
 
 </head>
@@ -417,7 +438,7 @@ height:100%;
     <li onclick="show_toggle(this)" id = "aniEdi"><span value="Animation">Animation Code Editor</span></li>
    <li onclick="show_toggle(this)"><span value="Drag">Drag/Drop Control Editor</span></li>
    <li onclick="show_toggle(this)"><span>Concept/Theory Editor</span></li>
-   <li onclick="show_toggle(this)"><span>Save Progress</span></li>
+   <li onclick="save)"><span>Save Progress</span></li>
 			</ul>
   <div class="bottom">
    
@@ -493,6 +514,24 @@ height:100%;
   
 </div>
 <!-- object chooser ends -->
+<!-- drag/drop control -->
+<div class="float-Drag float" style="width:20%;display:none;" onmousedown="drag_mousedown(this)">
+  <div class="row header">
+    <div class="float-head text-center col-xs-9" value="Drag">Drag/Drop Controller </div>
+    <div class="float-Drag-cancel  col-xs-3" onclick="cancel(this)">X</div>
+  </div>
+  <div class="content">
+    <div class="drag-head">ObjectName</div>
+<div class="drag-hint">Enter a,b,c for the equation of form ax+by+cz=0</div>
+<form class="drag-form">
+  <span>a</span><input type="text">
+   <span>b</span><input type="text">
+   <span>c</span><input type="text">
+</form>
+  </div>
+  <div class="okay"><button onclick="dragSubmit()">Submit</button></div>
+</div>
+<!-- drag/drop control ends-->
 
 
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
@@ -501,15 +540,19 @@ height:100%;
 <script src="https://codemirror.net/mode/javascript/javascript.js"></script>
 <script src='https://www.lequipe.fr/Football/Coupe-du-monde/Mundial-Memories/js/TweenLite.js'></script>
 
- <script src="js/OrbitControls.js"></script>
+        <script src="js/OrbitControls.js"></script>
         <script src="js/DragControls.js"></script>
         <script src="js/TrackballControls.js"></script>
-
+        <script src= "js/ThreeCSG.js"></script>
         <script src="js/dat.gui.min.js"></script>
 <script>
 		var path="";
                 var category=window.location.href.split("?")[1];
                if(category == "Mechanics") $('#aniEdi').css("display","block");
+                if(category == "Optics"){
+        
+    
+            }
 		$.ajax({
 		type:'GET',  
                 url: 'DataServlet?category='+category+'&&object=',
@@ -549,9 +592,194 @@ function anim(){
   custom_ani = new Function("",code);
  sh("edi");
 }
+	function convexlens_creator(focii){
+
+						
+						var leftRemoval = new THREE.Mesh(new THREE.SphereGeometry(focii,32,32),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+						leftRemoval.position.set(-1.5*focii/2,0,0);
+						
+						var rightRemoval = new THREE.Mesh(new THREE.SphereGeometry(focii,32,32),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+						rightRemoval.position.set(1.5*focii/2,0,0);
+						
+						var slab = new THREE.Mesh(new THREE.BoxGeometry(2*focii,2*focii,2*focii),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+						slab.position.set(0,0,0);
+						
+						var leftRemovalBSP = new ThreeBSP(leftRemoval);	
+						var rightRemovalBSP = new ThreeBSP(rightRemoval);
+						var slabBSP = new ThreeBSP(slab);
+						var resultBSP = slabBSP.intersect(rightRemovalBSP.intersect(leftRemovalBSP));
+						
+						var result = resultBSP.toMesh(new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+						result.geometry.computeFaceNormals();
+						result.geometry.computeVertexNormals();
+						scene.add(result);
+						console.log(result.position.x);
+
+
+			    		var lineGeometry = new THREE.Geometry();
+			    		lineGeometry.vertices.push(new THREE.Vertex(-1000,0,0));
+			    		lineGeometry.vertices.push(new THREE.Vertex(1000,0,0));
+			    
+			   			var line = new THREE.Line(lineGeometry,new THREE.LineBasicMaterial({color:"white"}));
+			  			result.add(line);
+			    
+			    		var f = focii;
+			    		var fac = 1.5*focii/2;
+					    var markers = new Array(4);
+					    markers[0] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+					    markers[0].position.set(-f,0,0);
+
+					    markers[1] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+					    markers[1].position.set(-2*f,0,0);
+					    
+					    markers[2] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+					    markers[2].position.set(f,0,0);
+					    
+					    markers[3] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+					    markers[3].position.set(2*f,0,0);
+
+					  //  line.add(markers[0]);
+					  //  line.add(markers[1]);
+					  //  line.add(markers[2]);
+					  //  line.add(markers[3]);
+					    result.focallength = focii;
+					    result.type = "convexlens";
+						objects.push(result);		    
+			   			dragElements.push(result);
+			   			//return result;
+			   		
+			}
+			function concavemirror_creator(focal){
+				  var geometry = new THREE.SphereGeometry( 2*focal, 32, 32,Math.PI/2,Math.PI,0,Math.PI);
+				  var material = new THREE.MeshPhongMaterial({color:'#C0C0C0',transparent:true,opacity:1});
+				  material.side = THREE.DoubleSide;
+				  var mirror = new THREE.Mesh( geometry, material );
+				  scene.add( mirror );
+				  mirror.position.set(0,0,0);
+				  var material_back = new THREE.MeshPhongMaterial({color:'#0A0A0A',transparent:true,opacity:1});
+				  var mirror_back = new THREE.Mesh( geometry, material_back );
+				  mirror.add(mirror_back);
+				  mirror_back.position.set(0.5,0,0);
+				  mirror.scale.x=0.25;
+				  mirror.type = "concavemirror";
+				  mirror.focallength = focal;
+				 objects.push(mirror);
+				 dragElements.push(mirror);
+				  //return mirror;
+			}
+						
+			function convexmirror_creator(focal){
+
+			  var geometry = new THREE.SphereGeometry( 2*focal, 32, 32,-Math.PI/2,Math.PI,0,Math.PI);
+			  var material = new THREE.MeshPhongMaterial({color:'#0A0A0A',transparent:true,opacity:1});
+			  material.side = THREE.DoubleSide;
+			  var mirror = new THREE.Mesh( geometry, material );
+			  scene.add( mirror );
+			  mirror.position.set(3,0,0);
+			  var material_front = new THREE.MeshPhongMaterial({color:'#C0C0C0',transparent:true,opacity:1});
+			  var mirror_front = new THREE.Mesh( geometry, material_front );
+			  mirror.add(mirror_front);
+			  mirror_front.position.set(-0.5,0,0);
+			  mirror.scale.x=0.25;
+			  mirror.focallength = focal;
+			  mirror.type = "convexmirror";
+			  objects.push(mirror);
+			  dragElements.push(mirror);
+			 
+			}
+
+
+				function concavelens_creator(focii){
+
+							var slab = new THREE.Mesh(new THREE.BoxGeometry(focii/2,focii,focii),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+							//scene.add(slab);
+
+							var leftRemoval = new THREE.Mesh(new THREE.SphereGeometry(focii,32,32),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+							//scene.add(leftRemoval);
+							leftRemoval.position.set(-focii,0,0);
+
+							var rightRemoval = new THREE.Mesh(new THREE.SphereGeometry(focii,32,32),new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.8}));
+							//scene.add(rightRemoval);
+							rightRemoval.position.set(focii,0,0);
+							
+							var slabBSP = new ThreeBSP(slab);
+							var leftRemovalBSP = new ThreeBSP(leftRemoval);	
+							var rightRemovalBSP = new ThreeBSP(rightRemoval);
+
+							var resultBSP = slabBSP.subtract(leftRemovalBSP.union(rightRemovalBSP));
+							
+							var result = resultBSP.toMesh(new THREE.MeshPhongMaterial({color:"white",transparent:true,opacity:0.7}));
+							result.geometry.computeFaceNormals();
+							result.geometry.computeVertexNormals();
+							scene.add(result);
+							
+
+				    		var lineGeometry = new THREE.Geometry();
+				    		lineGeometry.vertices.push(new THREE.Vertex(-1000,0,0));
+				    		lineGeometry.vertices.push(new THREE.Vertex(1000,0,0));
+				    
+				   			var line = new THREE.Line(lineGeometry,new THREE.LineBasicMaterial({color:"white"}));
+				  			result.add(line);
+				    
+				    		var f = focii;
+						    var markers = new Array(4);
+						    markers[0] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+						    markers[0].position.set(-f,0,0);
+
+						    markers[1] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+						    markers[1].position.set(-2*f,0,0);
+						    
+						    markers[2] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+						    markers[2].position.set(f,0,0);
+						    
+						    markers[3] = new THREE.Mesh(new THREE.SphereGeometry(0.4,32,32),new THREE.MeshPhongMaterial({color:"green"}));
+						    markers[3].position.set(2*f,0,0);
+
+						//    line.add(markers[0]);
+						 //   line.add(markers[1]);
+						//    line.add(markers[2]);
+						 //   line.add(markers[3]);
+						    result.type = "concavelens";
+						    result.focallength = focii;
+						    objects.push(result);
+						    dragElements.push(result);
+				   			
+				}
     
-    
-    
+  function wire_creator(){
+			
+			var y_pos = 19;
+			start = new THREE.Mesh(new THREE.SphereGeometry(0.5,10,10),new THREE.MeshBasicMaterial({color:"black"}));
+			scene.add(start);
+
+			start.position.set(-30,y_pos,0);
+			
+			end = new THREE.Mesh(new THREE.SphereGeometry(0.5,10,10),new THREE.MeshBasicMaterial({color:"black"}));
+			scene.add(end);
+			end.position.set(-10,y_pos,0);
+
+			var lineGeometry = new THREE.Geometry();
+			lineGeometry.vertices.push(new THREE.Vertex(start.position.x,y_pos,0));
+			lineGeometry.vertices.push(new THREE.Vertex(end.position.x,y_pos,0));
+			line = new THREE.Line(lineGeometry,new THREE.LineBasicMaterial({color:"white",linewidth:1000}));
+			scene.add(line);
+		
+		    dragElements.push(start);
+			dragElements.push(end);
+
+			start.line = line;
+			end.line = line;
+			line.start =start;
+			line.end = end;
+		
+			start.visible = false;
+			end.visible =false;
+			line.visible = false;
+
+
+			return line;
+		}  
+ if(category == "Mechanics"){   
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1 , 1000);
 var renderer = new THREE.WebGLRenderer();
@@ -628,6 +856,680 @@ document.addEventListener("mousedown",onDocumentMouseDown);
     intersects[0].object.gui(intersects[0].object);
   }
   }
+$('.main').append( renderer.domElement );
+renderScene();
+} else if (category == "Optics"){
+var objects=[]
+			var dragElements = [];
+			var image = new Array(objects.length);
+			var rays = new Array(objects.length);
+			var heightArrows = new Array(objects.length);
+			var ruler= new Array(202);
+			var start,end,line;
+		
+			
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			//document.body.appendChild( renderer.domElement );
+			$('.main').append( renderer.domElement );
+			var controls = new THREE.OrbitControls(camera,renderer.domElement);
+			camera.position.z = 60;
+				
+
+			var dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
+			dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
+			dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+
+			var ruler = wire_creator();
+
+			//var objectControls = new ObjectControls( camera );
+			scene.background = new THREE.Color("#67DEF7");
+		    var groundMaterial = new THREE.MeshBasicMaterial(  );
+		//---------------------------------------------------------------------------------------------------
+
+		 	var mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 6000, 6000 ), groundMaterial );
+		    mesh233.position.y =  -29;
+		    mesh233.material.color.set("lightgreen" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);
+
+		    var groundMaterial = new THREE.MeshBasicMaterial(  );
+		    mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry( 550, 5550 ), groundMaterial );
+		    mesh233.position.y = - 17-10;
+		    mesh233.material.color.set("#47FC57" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);
+		    var groundMaterial = new THREE.MeshBasicMaterial(  );
+		 
+		 	mesh233 = new THREE.Mesh( new THREE.PlaneBufferGeometry(300, 300 ), groundMaterial );
+		    mesh233.position.y = - 15-10;
+		    mesh233.material.color.set("#33C720" );
+		    mesh233.rotation.x = - Math.PI / 2;
+		    scene.add(mesh233);
+		    
+		
+		
+			var source = new THREE.Mesh(new THREE.SphereGeometry(0.5,32,32),new THREE.MeshPhongMaterial({color:"red"}));
+			scene.add(source);
+			dragElements.push(source);
+			source.position.x = -25;
+			source.position.y = 5;
+
+			var from = new THREE.Vector3( source.position.x, 0, 0 );
+			var to = new THREE.Vector3( source.position.x, source.position.y, 0 );
+			var direction = to.clone().sub(from);
+			var length = direction.length();
+			var SourcearrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xff0000 );
+			scene.add( SourcearrowHelper );			
+
+
+
+			var ambientLight;
+			var spotLight;
+	        ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,0,0);
+        	scene.add(ambientLight);
+            spotLight = new THREE.PointLight(16777215);
+            spotLight.position.set(60,10,40);
+        	spotLight.castShadow = true;
+        	scene.add(spotLight);
+       	    ambientLight = new THREE.AmbientLight(16777215, 0.5);
+            ambientLight.position.set(-100,100,100);
+        	scene.add(ambientLight);
+            
+
+            concavelens_creator(10);
+            convexlens_creator(10);
+            concavelens_creator(15);
+ 			//concavemirror_creator(5);
+          	//convexlens_creator(8);
+     		convexmirror_creator(8);
+            
+			endl = 0;
+
+			var allImagesButton = document.createElement("BUTTON");
+			allImagesButtonText = document.createTextNode("SHOW ALL IMAGES");
+			allImagesButton.setAttribute("name","HN");
+			allImagesButton.appendChild(allImagesButtonText);
+			allImagesButton.style.position = "absolute";
+			allImagesButton.style.left = "42%"; 
+			allImagesButton.type = "button";
+			document.body.appendChild(allImagesButton);  
+			allImagesButton.onclick = function(){
+				visibleCount = objects.length;
+			};
+
+
+			var prevButton = document.createElement("BUTTON");
+			prevButtonText = document.createTextNode("PREVIOUS IMAGE");
+			prevButton.setAttribute("name","HN");
+			prevButton.appendChild(prevButtonText);
+			prevButton.style.position = "absolute";
+			prevButton.style.left = "60%"; 
+		//	prevButton.style.top = "250px"; 
+			
+			prevButton.type = "button";
+			document.body.appendChild(prevButton);  
+			prevButton.onclick = function(){
+				if(visibleCount > 0)
+					makeVisible(-1);
+			};
+			var visibleLimit = objects.length;
+			var nextButton = document.createElement("BUTTON");
+			nextButtonText = document.createTextNode("NEXT IMAGE ");
+			nextButton.setAttribute("name","HN");
+			nextButton.appendChild(nextButtonText);
+			nextButton.style.position = "absolute";
+			nextButton.style.left = "77%"; 
+			nextButton.type = "button";
+			document.body.appendChild(nextButton);  
+			nextButton.onclick = function(){
+				if(visibleCount < visibleLimit )
+					makeVisible(1);
+			};
+			var distance = document.createElement("div");
+            distance.setAttribute("id","timedrpact");
+            distance.setAttribute("class","inner");
+            distance.innerHTML="";
+            distance.style.position = "absolute";
+            distance.style.left = "27.5%";
+            distance.style.top = "0%";
+
+            document.body.appendChild(distance);
+
+
+			var rulerStatus =false;
+			var rulerButton = document.createElement("BUTTON");
+			rulerButtonText = document.createTextNode("SHOW RULER");
+			rulerButton.setAttribute("name","HN");
+			rulerButton.appendChild(rulerButtonText);
+			rulerButton.style.position = "absolute";
+			rulerButton.style.left = "15%"; 
+			rulerButton.type = "button";
+			document.body.appendChild(rulerButton);  
+			rulerButton.onclick = function(){
+
+					if(rulerStatus){
+						start.visible = false;
+						end.visible = false;
+						line.visible = false;
+						rulerStatus = false;
+						rulerButton.innerHTML = "SHOW RULER";
+						distance.innerHTML = "";	
+					}
+					else{
+
+						start.visible = true;
+						end.visible = true;
+						line.visible = true;
+						rulerStatus = true;
+						rulerButton.innerHTML = "HIDE RULER";
+					}
+			};
+
+			
+
+
+			for(var i=0;i<objects.length;i++){
+				rays[i] = new Array(4);
+			}
+
+			for(var i=0;i<objects.length;i++){
+				console.log(i);
+						if(objects[i].type == "concavelens"){ 
+								var material = new THREE.LineBasicMaterial({
+									color: "black"
+								});
+								var LineMaterial = new THREE.LineDashedMaterial( {
+									color: "black",
+									dashSize: 0.7,
+									gapSize: 0.5,							
+								} );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+
+								rays[i][0] = new THREE.Line( geometry, material );
+								scene.add( rays[i][0] );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								rays[i][1] = new THREE.Line( geometry, LineMaterial );
+								scene.add( rays[i][1] );
+
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								rays[i][2] = new THREE.Line( geometry, material );
+								scene.add( rays[i][2] );
+
+								
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								geometry.computeLineDistances();
+								rays[i][3] = new THREE.Line( geometry, LineMaterial );
+								scene.add( rays[i][3] );
+
+								rays[i][0].visible = false;
+
+								rays[i][1].visible = false;
+
+								rays[i][2].visible = false;
+
+								rays[i][3].visible = false;
+
+								console.log("rays selected - concave lens");
+						}
+						else if(objects[i].type == "convexlens"){
+								var material = new THREE.LineBasicMaterial({
+									color: "black"
+								});
+								var LineMaterial = new THREE.LineDashedMaterial( {
+									color: "black",
+									dashSize: 0.7,
+									gapSize: 0.5,							
+								} );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+
+								rays[i][0] = new THREE.Line( geometry, material );
+								scene.add( rays[i][0] );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+		//						geometry.computeLineDistances();
+								rays[i][1] = new THREE.Line( geometry, material );
+		//						geometry.computeLineDistances();
+								scene.add( rays[i][1] );
+
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								rays[i][2] = new THREE.Line( geometry, material );
+								scene.add( rays[i][2] );
+
+								
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								geometry.computeLineDistances();
+								rays[i][3] = new THREE.Line( geometry, LineMaterial );
+								scene.add( rays[i][3] );
+
+								rays[i][0].visible = false;
+
+								rays[i][1].visible = false;
+
+								rays[i][2].visible = false;
+
+								rays[i][3].visible = false;
+
+
+								console.log("rays selected - convex lens");
+
+						}
+						else if(objects[i].type == "concavemirror"){
+								var material = new THREE.LineBasicMaterial({
+									color: "black"
+								});
+								var LineMaterial = new THREE.LineDashedMaterial( {
+									color: "black",
+									dashSize: 0.7,
+									gapSize: 0.5,							
+								} );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+
+								rays[i][0] = new THREE.Line( geometry, material );
+								scene.add( rays[i][0] );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+		//						geometry.computeLineDistances();
+								rays[i][1] = new THREE.Line( geometry, material );
+		//						geometry.computeLineDistances();
+								scene.add( rays[i][1] );
+
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								rays[i][2] = new THREE.Line( geometry, material );
+								scene.add( rays[i][2] );
+
+								
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								geometry.computeLineDistances();
+								rays[i][3] = new THREE.Line( geometry, LineMaterial );
+								scene.add( rays[i][3] );
+
+								console.log("rays selected - concavemirror_creator");
+								rays[i][0].visible = false;
+
+								rays[i][1].visible = false;
+
+								rays[i][2].visible = false;
+
+								rays[i][3].visible = false;
+
+						}
+
+						else if(objects[i].type == "convexmirror"){
+								var material = new THREE.LineBasicMaterial({
+									color: "black"
+								});
+								var LineMaterial = new THREE.LineDashedMaterial( {
+									color: "black",
+									dashSize: 0.7,
+									gapSize: 0.5,							
+								} );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+
+								rays[i][0] = new THREE.Line( geometry, material );
+								scene.add( rays[i][0] );
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+		//						geometry.computeLineDistances();
+								rays[i][1] = new THREE.Line( geometry, LineMaterial );
+		//						geometry.computeLineDistances();
+								scene.add( rays[i][1] );
+
+
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								rays[i][2] = new THREE.Line( geometry, material );
+								scene.add( rays[i][2] );
+
+								
+								var geometry = new THREE.Geometry();
+								geometry.vertices.push(
+									new THREE.Vector3( 0,0,0 ),
+									new THREE.Vector3( 0,0,0 ),
+								);
+								geometry.computeLineDistances();
+								rays[i][3] = new THREE.Line( geometry, LineMaterial );
+								scene.add( rays[i][3] );
+
+								console.log("rays selected - convexmirror_creator");
+								rays[i][0].visible = false;
+
+								rays[i][1].visible = false;
+
+								rays[i][2].visible = false;
+
+								rays[i][3].visible = false;
+
+						}
+
+				}
+			var visibleCount = 0;
+			function makeVisible ( step ){
+				if(step>0)
+					visibleCount++;
+				else
+					visibleCount--;
+			}
+
+			var render = function () {
+				requestAnimationFrame(render);
+
+				if(rulerStatus){
+					var  dx = start.position.x - end.position.x;
+					var  dy = start.position.y - end.position.y;
+					var d = Math.sqrt(dx*dx + dy*dy);
+				
+					distance.innerHTML = "distance : "+d.toFixed(2);
+				}	
+					line.geometry.vertices[0].x=start.position.x;
+					line.geometry.vertices[0].y=start.position.y;
+					line.geometry.vertices[0].z=start.position.z;
+
+		     		line.geometry.vertices[1].x=end.position.x;
+			     	line.geometry.vertices[1].y=end.position.y;
+					line.geometry.vertices[1].z=end.position.z;
+					
+					line.geometry.verticesNeedUpdate=true;
+							
+				if(SourcearrowHelper){
+					scene.remove(SourcearrowHelper);
+					var from = new THREE.Vector3( source.position.x, 0, 0 );
+					var to = new THREE.Vector3( source.position.x, source.position.y, 0 );
+					var direction = to.clone().sub(from);
+					var length = direction.length();
+				    SourcearrowHelper = new THREE.ArrowHelper(direction.normalize(), from, length, 0xff0000 );
+					scene.add( SourcearrowHelper );			
+				}
+				if( source.position.z!=0 ){
+					source.position.z = 0;
+				}
+				for(var i =0;i<objects.length;i++){
+					if(objects[i].position.y != 0 || objects[i].position.z !=0 ){
+					
+						objects[i].position.y = 0;
+						objects[i].position.z = 0;
+					}
+				}
+				for(var i =0;i<objects.length;i++){
+					if(objects[i].position.x < source.position.x + 5 ){
+						objects[i].position.x = source.position.x + 5;
+					}
+				}
+				
+				for(var i = 0;i<objects.length;i++)
+				{
+					
+					for(var j=0;j<objects.length;j++)
+					{
+						if(objects[i].position.x < objects[j].position.x )
+						{
+							var temp = objects[i];
+							objects[i] = objects[j];
+							objects[j] = temp;
+
+							var ray1 = rays[i][0];
+							var ray2 = rays[i][1];
+							var ray3 = rays[i][2];
+							var ray4 = rays[i][3];
+
+							rays[i][0] = rays[j][0];
+							rays[i][1] = rays[j][1];
+							rays[i][2] = rays[j][2];
+							rays[i][3] = rays[j][3];
+
+							rays[j][0] = ray1;
+							rays[j][1] = ray2;
+							rays[j][2] = ray3;
+							rays[j][3] = ray4;
+	
+						}
+					}
+				}
+				var u = source.position.x - objects[0].position.x ; 
+				var ho = source.position.y;
+			//	console.log("length - "+objects.length);
+				for (var i = 0;i<objects.length;i++){
+					scene.remove(image[i]);
+					if(heightArrows[i])
+						scene.remove(heightArrows[i]);
+			
+				}
+
+				for(var i = 0;i<objects.length;i++){
+					 var f = parseInt(objects[i].focallength);
+					 if(objects[i].type == "concavelens" || objects[i].type == "concavemirror"){
+					 	f = -f;
+					 }
+					 else{
+					 }
+					 var v;
+					 var hi;
+					 if(objects[i].type == "convexmirror" || objects[i].type == "concavemirror"){
+					  v = u*f/(u-f)
+					  hi = -ho*v/u;
+					 }
+					 else {
+  					  v = u*f/(u+f);
+					
+  					  hi = ho*v/u;
+					
+					 }
+					image[i] = new THREE.Mesh(new THREE.SphereGeometry(0.5,32,32),new THREE.MeshBasicMaterial({color:"red"}));
+					scene.add(image[i]);
+					image[i].visible = false;
+					image[i].position.x = objects[i].position.x + v;
+					image[i].position.y = hi;
+				
+					if(heightArrows[i]){
+						scene.remove(heightArrows[i]);
+						var from = new THREE.Vector3( image[i].position.x, 0, 0 );
+						var to = new THREE.Vector3( image[i].position.x, image[i].position.y, 0 );
+						var direction = to.clone().sub(from);
+						var length = direction.length();
+					    heightArrows[i] = new THREE.ArrowHelper(direction.normalize(), from, length, 0xff0000 );
+						scene.add( heightArrows[i] );	
+						heightArrows[i].visible = false;		
+					}
+					else{
+						var from = new THREE.Vector3( image[i].position.x, 0, 0 );
+						var to = new THREE.Vector3( image[i].position.x, image[i].position.y, 0 );
+						var direction = to.clone().sub(from);
+						var length = direction.length();
+					    heightArrows[i] = new THREE.ArrowHelper(direction.normalize(), from, length, 0xff0000 );
+						scene.add( heightArrows[i] );			
+						heightArrows[i].visible = false;	
+					}
+
+					if(objects[i].type == "concavelens" || objects[i].type == "convexlens" || objects[i].type == "concavemirror" || objects[i].type == "convexmirror"){ 
+						
+						rays[i][0].geometry.vertices[0].x = objects[i].position.x+u;
+						rays[i][0].geometry.vertices[0].y = ho;
+						rays[i][0].geometry.vertices[1].x = objects[i].position.x;
+						rays[i][0].geometry.vertices[1].y = objects[i].focallength/2;
+						
+						rays[i][2].geometry.computeLineDistances();
+						
+						rays[i][0].geometry.verticesNeedUpdate = true;
+					
+						rays[i][1].geometry.vertices[0].x = image[i].position.x;
+						rays[i][1].geometry.vertices[0].y = hi;
+						rays[i][1].geometry.vertices[1].x = objects[i].position.x;
+						rays[i][1].geometry.vertices[1].y = objects[i].focallength/2;
+						
+						rays[i][1].geometry.computeLineDistances();
+						rays[i][1].geometry.verticesNeedUpdate = true;
+						
+
+
+						rays[i][2].geometry.vertices[0].x = u+objects[i].position.x;
+						rays[i][2].geometry.vertices[0].y = ho;
+						rays[i][2].geometry.vertices[1].x = image[i].position.x;
+						rays[i][2].geometry.vertices[1].y = hi;
+						
+						rays[i][2].geometry.computeLineDistances();
+						
+						rays[i][2].geometry.verticesNeedUpdate = true;
+						
+						
+						rays[i][3].geometry.vertices[0].x = image[i].position.x;
+						rays[i][3].geometry.vertices[0].y = hi;
+						rays[i][3].geometry.vertices[1].x = objects[i].position.x;
+						rays[i][3].geometry.vertices[1].y = 0;
+						rays[i][3].geometry.computeLineDistances();
+						
+						rays[i][3].geometry.verticesNeedUpdate = true;
+						
+					}
+
+					 if(i < objects.length -1 ){
+					 	u = image[i].position.x - objects[i+1].position.x;
+					 	ho = hi;
+					 }
+					
+					 if(objects[i].type == "concavemirror" || objects[i].type == "convexmirror"){
+
+					 	visibleLimit = i+1;
+						if(visibleCount > visibleLimit ){
+							visibleCount = visibleLimit;
+						}
+
+					 	for(var k = i+1;k<objects.length;k++){
+							
+							rays[k][0].geometry.vertices[0].x = 0;
+							rays[k][0].geometry.vertices[0].y = 0;
+							rays[k][0].geometry.vertices[1].x = 0;
+							rays[k][0].geometry.vertices[1].y = 0;
+							
+							
+							rays[k][0].geometry.verticesNeedUpdate = true;
+							rays[k][1].geometry.vertices[0].x = 0;
+							rays[k][1].geometry.vertices[0].y = 0;
+							rays[k][1].geometry.vertices[1].x = 0;
+							rays[k][1].geometry.vertices[1].y = 0;
+							
+							
+							rays[k][1].geometry.verticesNeedUpdate = true;
+							rays[k][2].geometry.vertices[0].x = 0;
+							rays[k][2].geometry.vertices[0].y = 0;
+							rays[k][2].geometry.vertices[1].x = 0;
+							rays[k][2].geometry.vertices[1].y = 0;
+							
+							
+							rays[k][2].geometry.verticesNeedUpdate = true;
+					
+							
+							rays[k][3].geometry.vertices[0].x = 0;
+							rays[k][3].geometry.vertices[0].y = 0;
+							rays[k][3].geometry.vertices[1].x = 0;
+							rays[k][3].geometry.vertices[1].y = 0;
+							
+							
+							rays[k][3].geometry.verticesNeedUpdate = true;
+					
+
+					 	}
+
+
+					 	break;
+					 }
+				}
+				for(var i=0;i<objects.length;i++)
+				{
+				
+							rays[i][0].visible = false;
+							rays[i][1].visible = false;
+							rays[i][2].visible = false;
+							rays[i][3].visible = false;
+							heightArrows[i].visible = false;
+							image[i].visible = false;
+			
+				}			
+				for(var i=0;i<visibleCount;i++)
+				{
+			
+							rays[i][0].visible = true;
+							rays[i][1].visible = true;
+							rays[i][2].visible = true;
+							rays[i][3].visible = true;
+							heightArrows[i].visible = true;
+							image[i].visible = true;
+				}	
+				renderer.render(scene,camera);
+			};
+
+			render();
+}
 function updateMaterial(object,value)
 {
     //var value = cube.parameters.material;
@@ -695,7 +1597,10 @@ function drop(ev) {
   scene.add(temp);
   console.log(temp);
   console.log(window.innerHeight);
+    if(category != "Optics")
   temp.position.set(-((-( x / window.innerWidth )*2+1)*40), (-( y / window.innerHeight )*2  +1)*20,0.5);
+else
+     temp.position.set(-((-( x / window.innerWidth )*2+1)*40), 0,0.5);
 console.log(x+" "+temp.position.x);
   console.log(y+" "+temp.position.y);
   //ev.target.appendChild(document.getElementById(data));
@@ -703,8 +1608,7 @@ console.log(x+" "+temp.position.x);
     dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
     dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
 }
-$('.main').append( renderer.domElement );
-renderScene();
+
 // nav menu 
 $(".button-menu").click(function(e){ 
 			e.preventDefault();
@@ -825,13 +1729,7 @@ function save(){
         }
     });
     }
-    
-}
-
-  </script>
-
-  
-  
-
+ }
+</script>
 </body>
 </html>
