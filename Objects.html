@@ -561,6 +561,7 @@ width : 27% !important;
 		      console.log("Error Occured");
 		   },
 		  success: function(response) {
+
 		 var object = JSON.parse(response);
                                   
                 var t = "";
@@ -646,6 +647,7 @@ function anim(){
 					    result.type = "convexlens";
 						objects.push(result);		    
 			   			dragElements.push(result);
+                       
 			   			//return result;
 			   		
 			}
@@ -791,7 +793,9 @@ camera.position.z = 40;
 camera.lookAt(scene.position);
 var controls = new THREE.OrbitControls(camera,renderer.domElement);
             camera.position.z = 60;
-                
+    var IsDragRunning  = false;
+        var objectDragging;
+var collidableMeshList = [];           
             
             scene.background = new THREE.Color("#67DEF7");
             var groundMaterial = new THREE.MeshBasicMaterial(  );
@@ -826,38 +830,139 @@ var controls = new THREE.OrbitControls(camera,renderer.domElement);
                ambientLight = new THREE.AmbientLight(16777215, 0.5);
             ambientLight.position.set(-100,100,100);
             scene.add(ambientLight);
-document.addEventListener("mousedown",onDocumentMouseDown);
-            var raycaster;
-            function onDocumentMouseDown(event) {
-                console.log("mouse down");
-                 // event.preventDefault();
-                  mouse = new THREE.Vector2(); 
-  
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-  raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(mouse, camera);
-  var intersects = raycaster.intersectObjects(objects, true);
-  if (intersects.length > 0) {
-   
-      console.log(intersects[0].object.index);
-    if(gui){
-        gui.destroy();
-        console.log("destroying");
-      gui = new dat.GUI();
-      console.log("creating");
-    }else{
-          gui = new dat.GUI();
-      console.log("creating");
+
+
+//lol
+
+var parameter = 0.5;
+        	var arrayreq ;
+        	function checkForIntersection(){
+        			
+        	//		console.log("checkForIntersection and you're dragging "+objectDragging.name);
+					var MovingCube = objectDragging;
+
+					var originPoint = MovingCube.position.clone();
+				    arrayreq = [] ;
+
+					for(var i=0;i<collidableMeshList.length;i++){
+						if(objectDragging!=collidableMeshList[i])
+						{	arrayreq.push(collidableMeshList[i]);console.log("adding"+collidableMeshList[i].name);}
+
+					}
+
+					for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++)
+					{		
+						var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
+						var globalVertex = localVertex.applyMatrix4( MovingCube.matrix );
+						var directionVector = globalVertex.sub( MovingCube.position );
+						
+						var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+						var collisionResults = ray.intersectObjects( arrayreq );
+						if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+								console.log(MovingCube.name + " collided with "+collisionResults[0].object.name);
+								console.log(collisionResults[0].object.name);
+								if(MovingCube.position.x < collisionResults[0].object
+								.position.x)
+									collisionResults[0].object
+								.position.x += parameter;
+								if(MovingCube.position.x >= collisionResults[0].object
+								.position.x)
+									collisionResults[0].object
+								.position.x -= parameter;
+								if(MovingCube.position.y < collisionResults[0].object
+								.position.y)
+									collisionResults[0].object
+								.position.y += parameter;
+								if(MovingCube.position.y > collisionResults[0].object
+								.position.y)
+									collisionResults[0].object
+								.position.y -= parameter;
+						//		render();
+						}
+								//sphere.visible = false;
+					}
+				
+			
+        	}
+
+			document.addEventListener("mousedown",onDocumentMouseDown);
+			var raycaster;
+			function onDocumentMouseDown(event) {
+				// event.preventDefault();
+				var mouse;
+				mouse = new THREE.Vector2(); 
+			  
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		     	raycaster = new THREE.Raycaster();
+			    raycaster.setFromCamera(mouse, camera);
+			    var intersects = raycaster.intersectObjects(objects, true);
+			    
+			    if (intersects.length > 0) {
+			    	if(IsDragRunning == true){
+
+			    		objectDragging = intersects[0].object;
+
+                        if(gui){
+                            gui.destroy();
+                            console.log("destroying");
+                             gui = new dat.GUI();
+                            console.log("creating");
+                        }else{
+                            gui = new dat.GUI();
+                            console.log("creating");
     
-    }
+                         }
     //if(intersects[0].object.name === "object[0]")
     
-    intersects[0].object.gui(intersects[0].object);
-  }
-  }
+                        intersects[0].object.gui(intersects[0].object);
+
+			 			
+			        }    
+     			
+
+				    console.log(IsDragRunning );
+				    if(objectDragging)
+				    	console.log(objectDragging.name);
+			    }
+
+			document.addEventListener("mousemove",onDocumentMouseMove);
+			var raycaster;
+			function onDocumentMouseMove(event) {
+				// event.preventDefault();
+				if(IsDragRunning && objectDragging){
+					console.log("narendra bro currently you are dragging "+objectDragging.name);
+				
+					checkForIntersection();
+				}
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 $('.main').append( renderer.domElement );
 renderScene();
+
 } else if (category == "Optics"){
 var objects=[]
 			var dragElements = [];
@@ -878,13 +983,13 @@ var objects=[]
 			var controls = new THREE.OrbitControls(camera,renderer.domElement);
 			camera.position.z = 60;
 				
-
+      
 			var dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
-			dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
-			dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+			dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; IsDragRunning= true;} );
+			dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true;IsDragRunning=false; } );
 
 			var ruler = wire_creator();
-
+            var collidableMeshList = [];
 			//var objectControls = new ObjectControls( camera );
 			scene.background = new THREE.Color("#67DEF7");
 		    var groundMaterial = new THREE.MeshBasicMaterial(  );
@@ -943,11 +1048,16 @@ var objects=[]
 
             concavelens_creator(10);
             convexlens_creator(10);
-            concavelens_creator(15);
+            //concavelens_creator(15);
  			//concavemirror_creator(5);
           	//convexlens_creator(8);
-     		convexmirror_creator(8);
+     		//convexmirror_creator(8);
             
+
+
+
+
+
 			endl = 0;
 
 			var allImagesButton = document.createElement("BUTTON");
@@ -1605,8 +1715,8 @@ console.log(x+" "+temp.position.x);
   console.log(y+" "+temp.position.y);
   //ev.target.appendChild(document.getElementById(data));
   var dragControls = new THREE.DragControls( dragElements, camera, renderer.domElement );
-    dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; } );
-    dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; } );
+    dragControls.addEventListener( 'dragstart', function ( event ) { controls.enabled = false; IsDragRunning = true;} );
+    dragControls.addEventListener( 'dragend', function ( event ) { controls.enabled = true; IsDragRunning = false;} );
 }
 
 // nav menu 
