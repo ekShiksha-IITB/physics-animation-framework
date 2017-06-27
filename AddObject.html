@@ -24,7 +24,7 @@
 .floating{
   visibility:hidden;
   border:10px solid rgba(255,255,255,.5);
-  z-index:9;
+  z-index:9999;
   position:absolute;
   left:22.5%;
   top:10%;
@@ -48,12 +48,35 @@ width:55%;
   padding:40px;
 }
 .form-head {
-  color:purple;
-  font-size:22px;
-  margin-left:3%;
-  padding-bottom:1%;
-  padding-top:1%;
+    color: #18BC9C;
+    font-size: 24px;
+    margin-left: 3%;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-weight: bold;
 }
+.main {
+    margin-top: 7%;
+    color: #18BC9C;
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: whitesmoke;
+    padding-bottom: 2%;
+}
+body {
+    background-color: #18BC9C;
+}
+.main > input {
+    margin-left: 3%;
+}
+.main > div >input {
+    margin-left: 3%;
+}
+.main > select {
+    margin-left: 3%;
+}
+
+
 /*
 input {
   margin-left:3%;
@@ -81,6 +104,25 @@ input,select {
     margin-left: 3%;
     margin-right: 3%;
 }
+button {
+    margin: 3%;
+    font-size: 22px;
+}
+#func {
+display : none;
+}
+#blender {
+display:none;
+}
+input[type="file"] {
+    display: block;
+    padding-top: 1%;
+    padding-bottom: 1%;
+}
+input {
+    color: black;
+}
+
 /*
 button{
    color:purple;
@@ -160,19 +202,28 @@ div.floating
         </div>
         <!-- /.container-fluid -->
     </nav>
+<div class="main">
     <div class="form-head">Name :</div>
     <input class="object_name" type="text" name="name"/>
     <div class="form-head">Category:</div>
     <select class="category" name="category"></select>
-     <div class="form-head">Function Name</div>
-    <input class="object_func" type="text" name="function"/>
     <div class="form-head">Icon</div>
     <input class="object_icon" type="file" name="icon"/>
+    <span class="form-head" onclick="show_func()" style="padding-bottom:3%;">Enter Object Code</span> <span class="form-head" onclick="show_blend()" style="padding-bottom:3%;">Enter Blender Object</span>
+    <div id="func">
+    <div class="form-head">Function Name</div>
+    <input class="object_func" type="text" name="function"/>
     <div class="form-head">Code snippet :</div>
     <textarea id="int" type="text" name="object_code" width="600"></textarea>
     <button onclick="submit()">Submit</button>
 <button class="ini" style="cursor: pointer">Preview</button>
- 
+</div>
+<div id="blender">
+    <input class="blender_object" type="file" name="blender_object" onchange="startRead()"/>
+    <button onclick="submit()">Submit</button>
+<button class="ini" style="cursor: pointer">Preview</button>
+</div>
+ </div>
   <!--button(onclick="preview()") Preview-->
 </div>
 
@@ -187,6 +238,16 @@ div.floating
 <script src="https://codemirror.net/mode/javascript/javascript.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js'></script>
     <script>
+        function show_func(){
+    $('#func').css("display","block");
+    $('#blender').css("display","none");
+}
+function show_blend(){
+    $('#func').css("display","none");
+    $('#blender').css("display","block");
+    $('.float-data').html("<script>\r\nvar scene = new THREE.Scene();\r\n\r\nvar camera = new THREE.PerspectiveCamera(45, window.innerWidth\/window.innerHeight, 0.1 , 1000);\r\nvar renderer = new THREE.WebGLRenderer();\r\nrenderer.setClearColor(0x4FBFFE);\r\nrenderer.setSize(window.innerWidth\/2, window.innerHeight\/1.4);\r\ncamera.position.x = -30;\r\ncamera.position.y = 40;\r\ncamera.position.z = 30;\r\ncamera.lookAt(scene.position);\r\n\r\nfunction renderScene(){\r\nrequestAnimationFrame (renderScene);\r\nrenderer.render(scene , camera);\r\n}\r\n$(\'.float-data\').append( renderer.domElement );\r\nrenderScene();\r\n<\/script>");
+  
+}
         $.ajax({
         url: "DataServlet?category=&&object=",
         type:'GET',
@@ -241,14 +302,14 @@ document.getElementById('draggable-element').onmousedown = function () {
 document.onmousemove = _move_elem;
 document.onmouseup = _destroy; 
 var editor = CodeMirror.fromTextArea(document.getElementById("int"), {
-    lineNumbers: true,
+    lineNumbers: false,
     styleActiveLine: true,
     matchBrackets: true,
    mode:"javascript",
    theme:"blackboard"
   });
 function submit(){
-    alert("Hi");
+   
   var temp = {
     "name": $('.object_name').val().toLowerCase() ,
     "category":$('.category').val(),
@@ -273,11 +334,47 @@ function submit(){
 $(".ini").on("click",function(){
     $(".floating").css("visibility","visible");
  
-   $('.float-data').html("<script>\r\nvar scene = new THREE.Scene();\r\n\r\nvar camera = new THREE.PerspectiveCamera(45, window.innerWidth\/window.innerHeight, 0.1 , 1000);\r\nvar renderer = new THREE.WebGLRenderer();\r\nrenderer.setClearColor(0x4FBFFE);\r\nrenderer.setSize(window.innerWidth\/2, window.innerHeight\/1.4);\r\ncamera.position.x = -30;\r\ncamera.position.y = 40;\r\ncamera.position.z = 30;\r\ncamera.lookAt(scene.position);\r\n\r\n"+editor.getValue()+"\r\n\r\n                    scene.add("+$('.object_name').val().toLowerCase()+"_creator"+"());\r\n\r\nfunction renderScene(){\r\nrequestAnimationFrame (renderScene);\r\nrenderer.render(scene , camera);\r\n}\r\n$(\'.float-data\').append( renderer.domElement );\r\nrenderScene();\r\n<\/script>");
+   $('.float-data').html("<script>\r\nvar scene = new THREE.Scene();\r\n\r\nvar camera = new THREE.PerspectiveCamera(45, window.innerWidth\/window.innerHeight, 0.1 , 1000);\r\nvar renderer = new THREE.WebGLRenderer();\r\nrenderer.setClearColor(0x4FBFFE);\r\nrenderer.setSize(window.innerWidth\/2, window.innerHeight\/1.4);\r\ncamera.position.x = -30;\r\ncamera.position.y = 40;\r\ncamera.position.z = 30;\r\ncamera.lookAt(scene.position);\r\n\r\n"+editor.getValue()+"\r\n\r\n                    scene.add("+$('.object_func').val().toLowerCase()+"());\r\n\r\nfunction renderScene(){\r\nrequestAnimationFrame (renderScene);\r\nrenderer.render(scene , camera);\r\n}\r\n$(\'.float-data\').append( renderer.domElement );\r\nrenderScene();\r\n<\/script>");
   });
   $(".quit-toggle").on("click",function(){
     $(".floating").css("visibility","hidden")
   });
+function startRead()
+{
+    var file = $('.blender_object')[0].files[0];
+    if(file)
+	{
+        getAsText(file);
+    }
+}
+
+function getAsText(readFile)
+{
+	var reader;
+	reader = new FileReader();
+	// Read file into memory as UTF-8      
+    reader.readAsText(readFile, "UTF-8");
+    reader.onload = loaded;
+  }
+
+        function modelToScene( geometry, materials ) {
+          
+            obj = new THREE.Mesh( geometry, materials );
+           
+          //  scene.add( obj );
+
+scene.add(obj);
+        }
+
+
+function loaded(evt){
+    // Obtain the read file data    
+  var fileString = evt.target.result;
+ var loader = new THREE.JSONLoader();
+        loader.load( fileString, modelToScene );
+    
+  }
+
   </script>
 
   
