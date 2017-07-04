@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html >
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" type="image/x-icon" href="https://production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
+  <link rel="mask-icon" type="" href="https://production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
+  <title>CodePen - A Pen by  Reshabh Sharma</title>
+  
+  
+  
+  <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'>
+
+      <style>
+      /*
+.circle > img {
+    border-radius: 50%;
+    width: 20%;
+    border: 1px solid black;
+}
+.cir-text {
+    position:relative;
+    top:-48%;
+}
+.cir-text:hover {
+    font-size: 22px;
+    position: relative;
+    margin-left: 4%;
+    top: -24%;
+    font-size: 26px;
+    visibility:visible;
+}
+*/
+.circle{
+  position:absolute;
+  width:200px;
+  height:200px;
+   background-image: url('http://www.newsshare.in/wp-content/uploads/2017/04/Miniclip-8-Ball-Pool-Avatar-10.jpg');
+  -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+  border-radius:50%;
+  border:1px solid black;
+}
+.cir-text {
+    position: relative;
+    left: 3%;
+    top: 50%;
+    font-size: 26px;
+    visibility: hidden;
+    color:white;
+}
+.cir-w {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    
+}
+.circle-main {
+    background-color : rgba(44, 62, 80,1);
+    height:582px;
+
+}
+
+
+
+
+
+    </style>
+
+  
+  
+  
+  
+</head>
+
+<body translate="no" >
+
+  <div class="circle-main">
+  
+ 
+</div>
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+
+    <script>
+    var team = [
+  {
+    name: "reshabh1",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh2",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh3",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh4",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh5",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh6",
+    fb_url: "fb.com/reshabhsh"
+  },
+  {
+    name: "reshabh7",
+    fb_url: "fb.com/reshabhsh"
+  }
+];
+var coor = [[40,200],[25,200],[55,200],[32,15],[47,15],[32,380],[47,380]];
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+team = shuffle(team);
+
+for(var x in team){
+  $('.circle-main').append(' <div class="circle">'+
+                           '<div class="cir-w">'+
+                           '<div class="cir-text text-center">'+team[x].name+'</div>'+
+                           ' </div>'+
+                           '</div>'
+                            );
+}
+$(".circle").hover(function(){
+   
+    $(this.children[0].children[0]).css("visibility", "visible");
+    $(this.children[0]).css("background-color", "rgba(24, 188, 156,.8)");
+    }, function(){
+    $('.cir-text').css("visibility", "hidden");
+    $('.cir-w').css("background-color", "");
+});
+for(var i=0;i<7;i++){
+  $('.circle')[i].style.left = coor[i][0]+"%";
+   $('.circle')[i].style.top = coor[i][1]+"px";
+}
+  </script>
+
+  
+  
+
+</body>
+</html>
+ 
