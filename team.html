@@ -89,31 +89,38 @@
     var team = [
   {
     name: "reshabh1",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh2",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh3",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh4",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh5",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh6",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   },
   {
     name: "reshabh7",
-    fb_url: "fb.com/reshabhsh"
+    fb_url: "fb.com/reshabhsh",
+    img:''
   }
 ];
 var coor = [[40,200],[25,200],[55,200],[32,15],[47,15],[32,380],[47,380]];
@@ -139,9 +146,9 @@ function shuffle(array) {
 team = shuffle(team);
 
 for(var x in team){
-  $('.circle-main').append(' <div class="circle">'+
+  $('.circle-main').append(' <div class="circle" style="background-image: url("team/'+team[x].img+'");">'+
                            '<div class="cir-w">'+
-                           '<div class="cir-text text-center">'+team[x].name+'</div>'+
+                           '<div class="cir-text text-center"><a href="'+team[x].fb_url+'">'+team[x].name+'</a></div>'+
                            ' </div>'+
                            '</div>'
                             );
