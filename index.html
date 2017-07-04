@@ -7,27 +7,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
   
-    <meta name="author" content="Reshabh Sharma">
+    
 
-    <title>EkShiksha Physics Animation Framework</title>
+    <title>EkShiksha Physics Animation Creator</title>
+  
 
     <!-- Bootstrap Core CSS -->
-    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Theme CSS -->
-    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/css/freelancer.min.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <style>
 	section#about {
-    		border-top: 100px #fff solid;
+    		
 	}
 	.skills > a {
 		color: white;
 		font-size: 32px;
+	}
+	iframe{
+	    border:0px;
+	    width:100%;
+	    height:582px;
 	}
     </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -50,6 +56,7 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
+                
                 <a class="navbar-brand" href="#page-top">EkShiksha Physics</a>
             </div>
 
@@ -62,7 +69,17 @@
                    
                     <li class="page-scroll">
                         <a href="#about">About</a>
+                        
                     </li>
+                    <li class="page-scroll">
+                        <a href="Dashboard.html">Saved Experiments</a>
+                        
+                    </li>
+                     <li class="page-scroll">
+                        <a href="ObjectDashboard.html">Saved Objects</a>
+                        
+                    </li>
+
                    
                 </ul>
             </div>
@@ -76,7 +93,7 @@
         <div class="container" id="maincontent" tabindex="-1">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="https://blackrockdigital.github.io/startbootstrap-freelancer/img/profile.png" alt="">
+                    <img class="img-responsive" src="images/index.jpg" alt="" style="width: 20%;border-radius: 20%;">
                     <div class="intro-text">
                         <h1 class="name">Start Experimenting</h1>
                         <hr class="star-light">
@@ -93,7 +110,8 @@
         </div>
     </header>
 
-  
+  <iframe src="team.html">
+  </iframe>
 
     <!-- About Section -->
     <section class="success" id="about">
@@ -106,13 +124,13 @@
             </div>
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-2">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in magna vel velit vulputate hendrerit non sed nunc.</p>
+                    <p>A gift by today's young generation to future young generation with experience and guidance from the youth of yesteryear.</p>
                 </div>
                 <div class="col-lg-4">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in magna vel velit vulputate hendrerit non sed nunc.</p>
+                    <p>Ekshiksha-Physics offers an interactive framework where students can learn Physics concepts animations.</p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <a href="#" class="btn btn-lg btn-outline">
+                    <a href="AddObject.html" class="btn btn-lg btn-outline">
                         <i class="fa fa-code"></i> CONTRIBUTE
                     </a>
                 </div>
@@ -154,7 +172,7 @@
                     </div>
                     <div class="footer-col col-md-4">
                         <h3>About EkShiksha</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit<a href="http://www.ekshiksha.org.in/"> Explore </a>.</p>
+                        <p>Online tool for learning Physics <a href="http://www.ekshiksha.org.in/"> Explore </a>.</p>
                     </div>
                 </div>
             </div>
@@ -180,17 +198,19 @@
  
 
     <!-- jQuery -->
-    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/jquery/jquery.min.js"></script>
-
+    <script
+			  src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+			  integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
+			  crossorigin="anonymous"></script>
+		
     <!-- Bootstrap Core JavaScript -->
-    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/vendor/bootstrap/js/bootstrap.min.js"></script>
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!-- Plugin JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
     
     <!-- Theme JavaScript -->
-    <script src="https://blackrockdigital.github.io/startbootstrap-freelancer/js/freelancer.min.js"></script>
+    <script src="js/theme.js"></script>
     <script>
      
 	$.ajax({
@@ -204,7 +224,7 @@
         var category = response.split(',');
      var temp = '';
      for(x in category)
-	    temp += '<a href="Objects.html?'+category[x]+'"><div class="col-lg-3">'+category[x]+'</div></a>'; 
+	    temp += '<a href="Objects.html?'+category[x]+'"><div class="col-lg-6">'+category[x]+'</div></a>'; 
      $(".skills").html(temp);
 	  }
 	});
