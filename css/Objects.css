@@ -1,0 +1,481 @@
+  .bar {
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    z-index: 9;
+    background-color: black;
+    top: 0%;
+    left: 0%;
+    scroll-behavior: smooth;
+    overflow: scroll;
+}
+img {
+    vertical-align: middle;
+    padding-top: 10%;
+   
+}
+.navbar.navbar-toggleable-md.navbar-light.bg-faded {
+    position: absolute;
+    z-index: 9;
+    top: 0px;
+    right: 30%;
+}
+.hide-show-tool {
+    position: absolute;
+    top: 4px;
+    z-index: 9;
+    left: 26%;
+}
+.hide-show-ani {
+    position: absolute;
+    top: 4px;
+    z-index: 9;
+    left: 9%;
+}
+.edi {
+    position: absolute;
+    top: 16%;
+    width: 70%;
+    left: 16%;
+  background-color: aqua;
+  display : none;
+}
+.s_edi {
+    position: absolute;
+    top: 16%;
+    width: 70%;
+    left: 16%;
+  background-color: aqua;
+  display : none;
+}
+#menu{
+    display: block;
+    width: 300px;
+    position: fixed;
+    left: -300px;
+    top: 0;
+    height: 100%;
+    background: black;
+    z-index: 50;
+}
+.back_button:after{
+    content: "";
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left:50%;
+    margin-left: -7px;
+    margin-top: -7px;
+    background: url(images/return_icon.png?relo) no-repeat center center;
+    -webkit-transition: all 0.2s ease-in-out;
+    -moz-transition: all 0.2s ease-in-out;
+    -ms-transition: all 0.2s ease-in-out;
+    -o-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    transform:rotate(0deg);
+    -moz-transform:rotate(0deg);
+    -webkit-transform:rotate(0deg);
+    -o-transform:rotate(0deg);
+}
+.back_button:hover:after{
+    transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+}
+.back_button, .back_button:hover{
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    height: 62px;
+    width: 62px;
+    z-index: 34;
+   -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -ms-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+#exploit .back_button{
+    background-color: #87ad00; 
+}
+#exploit .back_button:hover{
+    background-color: #a5c240; 
+}
+#exploit .back_button:active{
+    background-color: #729200; 
+}
+#scandale .back_button{
+    background-color: #db5434; 
+}
+#scandale .back_button:hover{
+    background-color: #eb7b69;
+}
+#scandale .back_button:active{
+    background-color: #cd452f;
+}
+#match-legendaire .back_button{
+    background-color: #1d70da; 
+}
+#match-legendaire .back_button:hover{
+    background-color: #5694e2;   
+}
+#match-legendaire .back_button:active{
+    background-color: #1962be;   
+}
+#temps-additionnel .back_button{
+    background-color: #e67401;
+}
+#temps-additionnel .back_button:hover{
+    background-color: #ec9741;
+}
+#temps-additionnel .back_button:active{
+    background-color: #d06902;
+}
+#cross{
+    height: 40px;
+    width: 40px;
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    margin-top: -20px;
+    background-color: #1c324c;
+    z-index: -1;
+    -webkit-transition:right 200ms ease-in, background-color 100ms ease-in;
+    -moz-transition:right 200ms ease-in, background-color 100ms ease-in;
+    -ms-transition:right 200ms ease-in, background-color 100ms ease-in;
+    -o-transition:right 200ms ease-in, background-color 100ms ease-in;
+    transition:right 200ms ease-in, background-color 100ms ease-in;
+    transform:rotate(0deg);
+    -moz-transform:rotate(0deg);
+    -webkit-transform:rotate(0deg);
+    -o-transform:rotate(0deg);
+}
+#cross:after{
+    content: "";
+    display: block;
+    width: 10px;
+    height: 9px;
+    background: url('https://www.lequipe.fr/Football/Coupe-du-monde/Mundial-Memories/css/images/cross.png') no-repeat center center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -5px;
+    margin-left: -5px;
+    -webkit-transition:all 200ms ease-in-out;
+    -moz-transition:all 200ms ease-in-out;
+    -ms-transition:all 200ms ease-in-out;
+    -o-transition:all 200ms ease-in-out;
+    transition:all 200ms ease-in-out;
+}
+#cross:hover{
+    background-color: #213d5c;
+}
+#cross:hover:after{
+    transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -webkit-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+}
+#cross.active{
+    right: -40px;
+}
+#menu .background{
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: #1c324c;
+}
+.menu-title{
+    text-transform:uppercase;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 800;
+    opacity: 1;
+    text-align: center;
+    font-size: 1.875em;
+    width: 100%;
+    display: inline-block;
+    margin: 25px 0;
+}
+#menu .bottom{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    padding-left: 20px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+#menu .bottom p{
+    display: inline-block;
+    width: 100%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    font-size: 0.875em;
+    color: #636d7b;
+    line-height: 19px;
+    text-align: none;
+}
+#menu .bottom a{
+    color: #636d7b;
+    text-decoration: none;
+}
+#menu .bottom .bottom-title{
+    color: #f2c920;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 1.31em;
+    margin-bottom: 20px;
+}
+#menu .bottom .title-item{
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.875em;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+#menu .bottom .title-item a{
+    color: white;
+}
+ #menu .bottom a:hover{
+    text-decoration: underline;
+}
+.button-menu {
+    margin-left: 35px;
+    margin-top: -8%;
+    float: left;
+  display: block;
+height: auto;
+width: 40px;
+background: url(http://www.freeiconspng.com/uploads/settings-icon-6.png) no-repeat center center;
+position: absolute;
+top: 0px;
+}
+#navigation li span{
+    text-transform: uppercase;
+    color:#FFF;
+    text-decoration: none;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    padding-left: 25px;
+    line-height: 56px;
+    display: block;
+    font-size: .8em;
+}
+#navigation li.active{
+    border-color: #f2c920;
+}
+#navigation li {
+    width: 300px;
+    height: 52px;
+    background-color: #213d5c;
+    margin-bottom: 2px;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    border-left: 3px solid transparent;
+    -webkit-transition: all 0.1s linear;
+    -moz-transition: all 0.1s linear;
+    -ms-transition: all 0.1s linear;
+    -o-transition: all 0.1s linear;
+    transition: all 0.1s linear;
+}
+#menu{
+    background-color: #1d344e;
+}
+#navigation li:hover{
+    background: #29496d;
+}
+ul {
+  margin: 0;
+padding: 0;
+}
+#navigation li.active {
+    border-color: #f2c920;
+}
+#aniEdi {
+    display : none;
+}
+#staticEditor{
+    display : none;
+}
+.header {
+    background-color: #213D5C;
+    color: white;
+    font-size: 28px;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    -webkit-user-select: none; /* Chrome, Opera, Safari */
+    -moz-user-select: none; /* Firefox 2+ */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+.float , .float-Basic {
+    border: 5px #213D5C solid;
+    float:right;
+     position:absolute;
+      right : 25%;
+ top : 4%;
+}
+.okay {
+  padding-top:2%;
+  padding-bottom:1%;
+  padding-left:1%;
+ 
+}
+.okay > button {
+   background-color:#213D5C;
+  color:white;
+  padding:1%;
+  font-size:22px;
+  border:none;
+}
+.okay > button:active{
+   background-color:white;
+  color:#213D5C;
+  padding:1%;
+  font-size:22px;
+}
+.toolkit > div > img {
+    width: 75%;
+    padding: 10%;
+}
+.BasicInfo > form > span {
+  font-size:22px;
+  padding-left:7%;
+  }
+.BasicInfo > form > input {
+ margin-left:7%;
+  } 
+#draggable-element{
+}
+.float > .content > span {
+    font-size: 24px;
+    padding-left: 3%;
+}
+.float-Theme > .content > span {
+    font-size: 24px;
+    padding-left: 3%;
+}
+.Theme > div > img {
+    vertical-align: bottom;
+    margin-left: 2%;
+}
+.Theme > div > span {
+   font-size :20px;
+    }
+.Theme {
+  padding-top:2%;
+  padding-bottom:3%;
+}
+.toolkit > div > img {
+    width: 75%;
+    padding: 10%;
+}
+.toolkit {
+    height: 533px;
+    overflow-y: scroll;
+}
+.float-Object {
+width:22% !important ;
+top:0px;
+height:100%;
+}
+/* drag/drop editor */
+.float-Drag {
+
+width : 27% !important;
+
+}
+.drag-head{
+  font-size:22px;
+}
+.drag-form > span {
+  font-size : 20px;
+  padding-right:1%;
+  padding-left:2%;
+}
+.drag-form > input {
+  width : 15%;
+  }
+.drag-form{
+  padding-top:1%;
+}
+.drag-hint{
+  padding-top:2%;
+}
+button {
+    border: 2px black solid;
+    background-color: transparent;
+}
+
+/* drag/drop editor ends*/
+/* user controls */
+.user_control {
+  
+  padding-top:1%;
+  padding-bottom:3%;
+  padding-left:2%;
+ 
+}
+.user_control > span {
+  padding-right:1%;
+   padding-left:2%;
+}
+.add{
+  font-size:32px;
+  border-radius:50%;
+  
+}
+.usr_cd > input {
+    width: 18%;
+}
+.float-User {
+    width:57% !important;
+}
+.usr_cd > textarea {
+    vertical-align: top;
+    width: 99%;
+    height: 60px;
+}
+
+.usr_cd {
+    padding-top: 3%;
+}
+.float-UserD {
+    width:19% !important;
+}
+.usr_d {
+    padding-top: 3%;
+}
+.addD {
+    font-size: 32px;
+}
+#navigation {
+    overflow-y: scroll;
+}
+.Theme > div > button {
+    background-color: white;
+    font-size: 20px;
+    padding: 2%;
+    margin: 4%;
+}
+.ucform > input {
+    width: 12%;
+}
+
+
+
+
+/* user controls ends */
